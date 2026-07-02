@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>AFC Platform Training Guide</title>
+<style>
+  :root {
+    --ink: #1b1d20;
+    --surface: #212226;
+    --surface-2: #26272c;
+    --line: #383a40;
+    --gold: #e9c46a;
+    --gold-deep: #c9a84c;
+    --gold-soft: rgba(233, 196, 106, 0.08);
+    --cream: #f7f6f2;
+    --muted: #a9abb3;
+    --spark: #7ee787;
+    --amber: #fbbf24;
+    --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+    --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  /* Anchor jumps are instant on purpose: smooth scrolling stalls across a document this long. */
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  /* ---------- top band ---------- */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 20px;
+    background: rgba(27, 29, 32, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .mark {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, #f7e7a8, var(--gold-deep));
+    color: #141414; font-weight: 800; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif);
+  }
+  .topbar h1 { font-size: 15px; margin: 0; font-weight: 600; letter-spacing: 0.02em; }
+  .topbar .sub { color: var(--muted); font-size: 12.5px; }
+  .topbar .spacer { flex: 1; }
+  .topbar a.btn, button.menu-btn {
+    color: var(--cream); text-decoration: none; font-size: 12.5px;
+    border: 1px solid var(--line); padding: 6px 12px; border-radius: 999px;
+    background: none; cursor: pointer; font-family: var(--sans);
+  }
+  .topbar a.btn:hover, button.menu-btn:hover { border-color: var(--gold); color: var(--gold); }
+  button.menu-btn { display: none; }
+
+  /* ---------- layout ---------- */
+  .wrap { display: flex; max-width: 1400px; margin: 0 auto; }
+  aside {
+    width: 300px; flex: none;
+    position: sticky; top: 59px;
+    height: calc(100vh - 59px);
+    overflow-y: auto;
+    padding: 20px 14px 40px 20px;
+    border-right: 1px solid var(--line);
+  }
+  main { flex: 1; min-width: 0; padding: 12px 36px 120px; }
+  @media (max-width: 960px) {
+    aside {
+      position: fixed; left: 0; top: 59px; bottom: 0; height: auto;
+      background: var(--ink); z-index: 40; transform: translateX(-105%);
+      transition: transform 0.2s ease; border-right: 1px solid var(--line);
+      box-shadow: 8px 0 30px rgba(0,0,0,0.5);
+    }
+    aside.open { transform: translateX(0); }
+    button.menu-btn { display: inline-block; }
+    main { padding: 12px 18px 100px; }
+  }
+
+  /* ---------- sidebar ---------- */
+  .search-box { position: relative; margin-bottom: 14px; }
+  .search-box input {
+    width: 100%; padding: 9px 30px 9px 12px;
+    background: var(--surface); color: var(--cream);
+    border: 1px solid var(--line); border-radius: 10px;
+    font-size: 13.5px; font-family: var(--sans); outline: none;
+  }
+  .search-box input:focus { border-color: var(--gold); }
+  .search-box .clear {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: var(--muted); cursor: pointer;
+    font-size: 15px; padding: 2px 6px; display: none;
+  }
+  .search-meta { font-size: 12px; color: var(--gold); min-height: 18px; margin: 0 0 8px 2px; }
+  nav.toc { font-size: 13.5px; }
+  nav.toc .part {
+    text-transform: uppercase; letter-spacing: 0.22em; font-size: 10.5px;
+    font-weight: 700; color: var(--gold); margin: 18px 0 6px;
+  }
+  nav.toc a {
+    display: block; color: var(--muted); text-decoration: none;
+    padding: 4.5px 10px; border-left: 2px solid transparent; border-radius: 0 8px 8px 0;
+    line-height: 1.35;
+  }
+  nav.toc a:hover { color: var(--cream); background: var(--surface); }
+  nav.toc a.active { color: var(--gold); border-left-color: var(--gold); background: var(--gold-soft); }
+  nav.toc a.dim { opacity: 0.3; }
+
+  /* ---------- content ---------- */
+  .hero { padding: 44px 0 8px; }
+  .hero .eyebrow {
+    text-transform: uppercase; letter-spacing: 0.28em; font-weight: 600;
+    font-size: 11.5px; color: var(--gold);
+  }
+  .hero h2.title { font-family: var(--serif); font-size: clamp(30px, 4.5vw, 52px); margin: 10px 0 12px; line-height: 1.05; font-weight: 500; }
+  .hero p { color: var(--muted); max-width: 60ch; margin: 0; }
+
+  h2.part-head {
+    font-family: var(--serif); font-size: clamp(24px, 3vw, 36px);
+    margin: 70px 0 6px; padding-top: 26px; border-top: 1px solid var(--line);
+    font-weight: 500;
+  }
+  h2.part-head .kicker {
+    display: block; font-family: var(--sans); text-transform: uppercase;
+    letter-spacing: 0.26em; font-size: 11px; color: var(--gold); font-weight: 700;
+    margin-bottom: 8px;
+  }
+  section.doc { padding: 34px 0 6px; scroll-margin-top: 80px; }
+  section.doc > h3 {
+    font-family: var(--serif); font-size: 25px; font-weight: 500; margin: 0 0 4px;
+  }
+  section.doc > h3 .hash { color: var(--gold); opacity: 0; text-decoration: none; margin-left: 8px; font-size: 18px; }
+  section.doc > h3:hover .hash { opacity: 1; }
+  section.doc .lede { color: var(--muted); margin: 2px 0 18px; max-width: 72ch; }
+  section.doc h4 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin: 26px 0 10px; }
+
+  ol.steps { margin: 12px 0 6px; padding-left: 0; counter-reset: step; list-style: none; max-width: 74ch; }
+  ol.steps li {
+    counter-increment: step; position: relative;
+    padding: 0 0 12px 44px; margin: 0;
+  }
+  ol.steps li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: 1px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--gold-soft); border: 1px solid var(--gold-deep);
+    color: var(--gold); font-size: 12.5px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  ul.plain { max-width: 74ch; padding-left: 20px; margin: 10px 0; }
+  ul.plain li { margin: 5px 0; }
+  p { max-width: 74ch; }
+  b, strong { color: var(--cream); }
+  a { color: var(--gold); }
+  code {
+    background: var(--surface-2); border: 1px solid var(--line);
+    padding: 1px 6px; border-radius: 6px; font-size: 0.88em; color: var(--gold);
+  }
+
+  .callout {
+    border: 1px solid var(--gold-deep); background: var(--gold-soft);
+    border-radius: 14px; padding: 14px 18px; margin: 18px 0; max-width: 78ch;
+  }
+  .callout.warn { border-color: #8a6d1f; background: rgba(251, 191, 36, 0.06); }
+  .callout .tag {
+    display: inline-block; font-size: 10.5px; font-weight: 800; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 4px;
+  }
+  .callout.warn .tag { color: var(--amber); }
+  .callout p { margin: 4px 0; }
+
+  figure { margin: 20px 0; max-width: 900px; }
+  figure img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--line); border-radius: 14px;
+    background: var(--surface);
+  }
+  figure figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .shots-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 980px; }
+  @media (max-width: 760px) { .shots-2 { grid-template-columns: 1fr; } }
+  .phones { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; max-width: 980px; }
+  .phones figure { max-width: 270px; margin: 10px auto; }
+  .phones figure img { border-radius: 22px; border-width: 2px; }
+
+  table.facts {
+    border-collapse: collapse; margin: 14px 0; font-size: 14px; width: 100%; max-width: 860px;
+    overflow-x: auto; display: block;
+  }
+  table.facts th, table.facts td {
+    text-align: left; padding: 9px 14px; border: 1px solid var(--line); vertical-align: top;
+  }
+  table.facts th { background: var(--surface-2); color: var(--gold); font-weight: 600; white-space: nowrap; }
+  table.facts td { background: var(--surface); }
+  table.facts td:first-child { white-space: nowrap; }
+
+  .faq { margin: 22px 0 6px; max-width: 78ch; }
+  .faq .qa {
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 16px; margin: 10px 0; background: var(--surface);
+    page-break-inside: avoid;
+  }
+  .faq .q { font-weight: 600; color: var(--gold); margin: 0 0 4px; }
+  .faq .a { margin: 0; color: var(--cream); }
+  .faq .a b { color: var(--gold); }
+
+  .cred {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13.5px; background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 14px; display: inline-block; margin: 4px 8px 4px 0;
+  }
+  .backtop { text-align: center; margin-top: 60px; }
+  mark, ::highlight(search-hits) { background: var(--gold); color: #141414; }
+
+  /* ---------- print ---------- */
+  @media print {
+    :root { --ink: #ffffff; --surface: #ffffff; --surface-2: #f2f0ea; --line: #c9c6bd; --cream: #111111; --muted: #444444; --gold: #7a5d16; --gold-deep: #7a5d16; --gold-soft: #f6efdb; }
+    body { background: #fff; color: #111; font-size: 12px; }
+    .topbar, aside, .backtop, .noprint { display: none !important; }
+    .wrap { display: block; }
+    main { padding: 0; }
+    section.doc { padding: 14px 0; page-break-inside: auto; }
+    h2.part-head { page-break-before: page; margin-top: 20px; }
+    figure, .callout, table.facts, ol.steps li { page-break-inside: avoid; }
+    figure img { border: 1px solid #999; max-width: 620px; }
+    a { color: #7a5d16; text-decoration: none; }
+    .phones figure { max-width: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="mark">AFC</div>
+  <div>
+    <h1>AFC Platform Training Guide</h1>
+    <div class="sub">How every part of the booking platform works, for Andre, Mikey, and Sahand</div>
+  </div>
+  <div class="spacer"></div>
+  <a class="btn noprint" href="javascript:window.print()">Print</a>
+  <button class="menu-btn" id="menuBtn">Menu</button>
+</div>
+
+<div class="wrap">
+<aside id="sidebar">
+  <div class="search-box">
+    <input id="search" type="search" placeholder="Search this guide&hellip;" autocomplete="off" />
+    <button class="clear" id="searchClear" aria-label="Clear search">&times;</button>
+  </div>
+  <p class="search-meta" id="searchMeta"></p>
+  <nav class="toc" id="toc">
+    <div class="part">Start here</div>
+    <a href="#overview">What this platform is</a>
+    <div class="part">Part 1 &middot; Parent side</div>
+    <a href="#p1-signup">Creating an account</a>
+    <a href="#p1-login">Logging in &amp; password reset</a>
+    <a href="#p1-booking">Booking a session</a>
+    <a href="#p1-tokens">AFC Tokens wallet</a>
+    <a href="#p1-elite">The Elite journey</a>
+    <a href="#p1-performance">Performance classes</a>
+    <a href="#p1-rewards">Rewards &amp; Refer a Family</a>
+    <a href="#p1-recurring">Recurring weekly slots</a>
+    <a href="#p1-account">Athletes, waiver &amp; account</a>
+    <div class="part">Part 2 &middot; Admin side</div>
+    <a href="#p2-dashboard">Dashboard</a>
+    <a href="#p2-bookings">Bookings</a>
+    <a href="#p2-checkin">Session Check-In</a>
+    <a href="#p2-coaches">Coaches</a>
+    <a href="#p2-availability">Availability</a>
+    <a href="#p2-services">Services &amp; Pricing</a>
+    <a href="#p2-clients">Clients &amp; Leads</a>
+    <a href="#p2-payments">Payments &amp; refunds</a>
+    <a href="#p2-coachpay">Coach Pay</a>
+    <a href="#p2-tokens-admin">AFC Tokens (admin)</a>
+    <a href="#p2-emails">Email Log &amp; templates</a>
+    <a href="#p2-content">Site Content</a>
+    <a href="#p2-roster">Class Roster</a>
+    <a href="#p2-settings">Settings &amp; permissions</a>
+    <div class="part">Part 3 &middot; Behind the scenes</div>
+    <a href="#p3-emails">Which emails go out, and when</a>
+    <a href="#p3-crons">The two daily automations</a>
+    <a href="#p3-completed">What "Completed" triggers</a>
+    <div class="part">Part 4 &middot; Honesty section</div>
+    <a href="#p4-limits">Known limits: never over-promise</a>
+    <div class="part">Part 5 &middot; Quick reference</div>
+    <a href="#p5-cheatsheet">Cheat sheet &amp; key numbers</a>
+  </nav>
+</aside>
+
+<main id="content">
+
+<div class="hero">
+  <span class="eyebrow">AFC &middot; Internal training</span>
+  <h2 class="title">Know the platform like you built it.</h2>
+  <p>This guide walks through every screen a parent, a coach, or an admin will ever touch. After reading it, anyone on the team should be able to answer any question a parent or coach asks. Use the search box on the left, or print the whole thing.</p>
+</div>
+
+<!-- ============================================================ START -->
+<section class="doc" id="overview">
+  <h3>What this platform is <a class="hash" href="#overview">#</a></h3>
+  <p class="lede">One website, three surfaces. Everything runs on the same database, so a booking made anywhere shows up everywhere.</p>
+  <ul class="plain">
+    <li><b>The public site + parent portal</b>: families browse programs, book sessions, load AFC Tokens, and manage their athletes at <code>afsoccer.club</code> (currently the afcdemo Netlify site).</li>
+    <li><b>The admin Control Center</b> at <code>/admin</code>: dashboards, bookings, clients, payments, coach pay, emails, and site copy. What each person sees depends on their permissions.</li>
+    <li><b>The coach Session Check-In</b> at <code>/admin/check-in</code>: a phone-first screen where a coach taps who showed up after a session. That tap drives coach pay, loyalty rewards, and referral payouts.</li>
+  </ul>
+  <figure>
+    <img width="1600" height="1075" src="images/home.webp" alt="AFC public homepage" loading="lazy" />
+    <figcaption>The public homepage. Families start here: Find your athlete's path, or Book a session.</figcaption>
+  </figure>
+  <div class="callout">
+    <span class="tag">Demo logins</span>
+    <p>Practice with these accounts on the demo site:</p>
+    <p>
+      <span class="cred">andre@afsoccer.club &middot; demo1234</span> owner, sees everything<br />
+      <span class="cred">parent@example.com &middot; demo1234</span> demo family (Jordan Rivera, athlete Mateo)
+    </p>
+  </div>
+  <div class="callout warn">
+    <span class="tag">Practice safely</span>
+    <p>The demo site uses the <b>live demo database</b>. If you create test bookings or families to practice, start every name with <code>ZZTest</code> so they are easy to spot and delete afterwards. Better yet, practice with the seeded Rivera family.</p>
+  </div>
+</section>
+
+<!-- ============================================================ PART 1 -->
+<h2 class="part-head" id="part1"><span class="kicker">Part 1</span>The parent side</h2>
+
+<section class="doc" id="p1-signup">
+  <h3>Creating an account &amp; verifying email <a class="hash" href="#p1-signup">#</a></h3>
+  <p class="lede">Parents can create an account three ways: from the Sign up page, inline while booking, or after a guest booking. All of them end in the same place: a family account that can book, pay with tokens, and track athletes.</p>
+
+  <h4>From the Sign up page</h4>
+  <ol class="steps">
+    <li>Click <b>Get Started</b> (or go to <code>/signup</code>).</li>
+    <li><b>Contact</b>: enter full name, phone, and email, then click continue.</li>
+    <li><b>Verify</b>: a 6-digit code is emailed. Type it in. The resend button unlocks after 60 seconds if it did not arrive.</li>
+    <li><b>Password</b>: choose a password, at least 8 characters. The account is created and the parent lands on a welcome page, already signed in.</li>
+  </ol>
+  <figure>
+    <img width="1600" height="1075" src="images/parent-signup.webp" alt="Signup wizard" loading="lazy" />
+    <figcaption>The signup wizard: Contact, then Verify, then Password.</figcaption>
+  </figure>
+
+  <h4>The other two doors</h4>
+  <ul class="plain">
+    <li><b>While booking</b>: on the booking form's Details step, a new parent is offered "Create your AFC account" with a password field. They can also press "Just booking once? Continue as guest".</li>
+    <li><b>After a guest booking</b>: the confirmation page shows "Create your AFC account". One password and the booking, contact details, and optionally the athlete are saved to the new account.</li>
+  </ul>
+  <p>Accounts created during booking skip the 6-digit code. Instead they get a welcome email with a confirm-your-email link, and the account page shows a banner with a resend button until they click it. <b>Verification is not required to book or pay</b>: it just proves the inbox works so future emails land.</p>
+
+  <div class="faq">
+    <div class="qa"><p class="q">A parent says the code never arrived. What do I tell them?</p><p class="a">Wait 60 seconds and press resend, and check spam. On the demo site, see the sandbox note in <a href="#p4-limits">Known limits</a>: emails only reach the test inbox until the sending domain is verified.</p></div>
+    <div class="qa"><p class="q">Do parents need to verify email before booking?</p><p class="a">No. Booking, paying, and tokens all work unverified. The banner on their account page nags gently until they confirm.</p></div>
+    <div class="qa"><p class="q">Can one account manage several kids?</p><p class="a">Yes. A family account holds any number of athlete profiles, one wallet, and one rewards page.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-login">
+  <h3>Logging in &amp; password reset <a class="hash" href="#p1-login">#</a></h3>
+  <p class="lede">Parents sign in at <code>/login</code> (the Log in link in the site header). A login lasts 30 days on that device before it asks again.</p>
+  <div class="shots-2">
+    <figure>
+      <img width="1600" height="1075" src="images/parent-login.webp" alt="Login page" loading="lazy" />
+      <figcaption>Email + password. The link below the form starts a reset.</figcaption>
+    </figure>
+    <figure>
+      <img width="1600" height="1075" src="images/parent-forgot-password.webp" alt="Forgot password" loading="lazy" />
+      <figcaption>Reset: email, then a 6-digit code, then a new password.</figcaption>
+    </figure>
+  </div>
+  <h4>Forgot password</h4>
+  <ol class="steps">
+    <li>Click <b>Forgot password</b> on the login page.</li>
+    <li>Enter the account email. A 6-digit code is sent (60-second resend, same as signup).</li>
+    <li>Type the code, then choose a new password (8+ characters). They are signed in right away.</li>
+  </ol>
+  <div class="faq">
+    <div class="qa"><p class="q">A parent is locked out and email is not working. Can we reset it for them?</p><p class="a">There is no admin "set password" button. The reset flow needs their inbox. On the demo, email is sandboxed, so use the seeded demo parent instead of real signups.</p></div>
+    <div class="qa"><p class="q">Does changing a password log out other devices?</p><p class="a">Yes. A password change or reset invalidates older logins everywhere.</p></div>
+    <div class="qa"><p class="q">Is the admin login the same page?</p><p class="a">No. Staff sign in at <code>/admin/login</code>. Same idea, separate door. See <a href="#p2-dashboard">Dashboard</a>.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-booking">
+  <h3>Booking a session (the wizard) <a class="hash" href="#p1-booking">#</a></h3>
+  <p class="lede">The Book a session flow is five steps: <b>Service &rarr; Time &rarr; Coach &rarr; Details &rarr; Review</b>. A progress bar on top lets parents jump back to any step they already finished.</p>
+
+  <ol class="steps">
+    <li><b>Service</b>: pick the program. Cards show price, length, and a "What's included" panel. Elite formats carry an "Elite &middot; by acceptance" badge: they can only be booked for an athlete who has been accepted into Elite.</li>
+    <li><b>Time</b>: pick a day on the calendar, then a time. Only days and times with real coach availability show up. Parents can book up to 6 months ahead.</li>
+    <li><b>Coach</b>: only coaches who are actually free at that exact time appear. If just one coach is available, this step is skipped automatically.</li>
+    <li><b>Details</b>: who is training (signed-in parents tap a saved athlete or "Someone else"), athlete age, parent contact info, optional notes, and the required waiver. New parents see the create-account offer here, with a guest option.</li>
+    <li><b>Review</b>: a summary with Edit links per row. "Continue to payment" places the booking and opens checkout.</li>
+  </ol>
+
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/book-1-service.webp" alt="Service step" loading="lazy" /><figcaption>Step 1: pick a service. Elite formats are badged.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-2-time.webp" alt="Time step" loading="lazy" /><figcaption>Step 2: calendar plus real open times for that day.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-3-coach.webp" alt="Coach step" loading="lazy" /><figcaption>Step 3: only coaches free at that slot.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-4-details.webp" alt="Details step" loading="lazy" /><figcaption>Step 4: athlete, contact, waiver, and the account offer.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-details-signedin.webp" alt="Details step signed in" loading="lazy" /><figcaption>Signed-in parents tap a saved athlete instead of retyping.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-5-waiver.webp" alt="Waiver modal" loading="lazy" /><figcaption>The waiver: parents must scroll to the end before I agree unlocks.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-6-review.webp" alt="Review step" loading="lazy" /><figcaption>Step 5: review everything, then continue to payment.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-7-checkout.webp" alt="Checkout" loading="lazy" /><figcaption>Checkout: order summary plus payment. Card checkout is demo mode for now.</figcaption></figure>
+  </div>
+
+  <h4>Paying, and what happens after</h4>
+  <ul class="plain">
+    <li>Checkout offers <b>AFC Tokens</b> (if the family's balance covers it), or card. Families with prepaid session credits from the old pack system can use those too.</li>
+    <li>Paid bookings become <b>CONFIRMED</b> right away and the family gets a confirmation email plus receipt. An unpaid booking sits as a <b>PENDING</b> request until staff confirm or collect.</li>
+    <li>The confirmation page (and email) includes an add-to-calendar link for Apple and Google Calendar.</li>
+  </ul>
+
+  <h4>Guest booking</h4>
+  <p>No account is needed to book. A guest fills the same five steps, pays, and gets the same emails. Their confirmation page then offers to turn the booking into an account with one password. Until they do, staff will see the booking under Clients with contact info but no login.</p>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/book-8-confirmation.webp" alt="Confirmation page" loading="lazy" /><figcaption>The confirmation page after paying.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-9-claim-account.webp" alt="Claim account prompt" loading="lazy" /><figcaption>Guests get a one-password account offer right on the confirmation page.</figcaption></figure>
+  </div>
+
+  <div class="faq">
+    <div class="qa"><p class="q">Why can't a parent see a coach they wanted?</p><p class="a">The Coach step only lists coaches free at the chosen time who also offer that service. Ask them to try another time, or book it for them from admin.</p></div>
+    <div class="qa"><p class="q">Why is a class missing from the list for their athlete?</p><p class="a">Elite formats need an accepted athlete. Performance classes check age band and level: see <a href="#p1-performance">Performance classes</a>.</p></div>
+    <div class="qa"><p class="q">The time they wanted disappeared at the last step.</p><p class="a">Someone else took the slot while they were filling the form. The wizard sends them back to the Time step to pick another. Nothing was charged.</p></div>
+    <div class="qa"><p class="q">Do guests really get no account?</p><p class="a">Correct, until they set a password on the confirmation page or sign up later with the same email. The guest-account invitation email nudges them too.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-tokens">
+  <h3>AFC Tokens: the wallet <a class="hash" href="#p1-tokens">#</a></h3>
+  <p class="lede">One family balance for everything. <b>1 token = 1 dollar, always.</b> No bonus tokens on bigger loads, no expiry, works on any program. Wallet lives at Account &rarr; AFC Tokens.</p>
+
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/parent-wallet.webp" alt="Wallet page" loading="lazy" /><figcaption>Balance up top, then load amounts: $100, $250, $500, $1,000, or a custom amount.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-checkout-tokens.webp" alt="Checkout with tokens" loading="lazy" /><figcaption>At checkout, tokens appear as the first payment option when the balance covers the session.</figcaption></figure>
+  </div>
+
+  <h4>The rules parents ask about</h4>
+  <table class="facts">
+    <tr><th>Loading</th><td>Quick amounts $100 / $250 / $500 / $1,000, or custom from $20 up to $10,000. Always 1 token per dollar.</td></tr>
+    <tr><th>Spending</th><td>At checkout, "Pay N tokens" shows whenever the balance covers the price. Tokens confirm the session instantly.</td></tr>
+    <tr><th>Expiry</th><td>Never. That is a selling point over the old session packs.</td></tr>
+    <tr><th>Cancelling</th><td>A parent can cancel any upcoming session from their account until its start time. If it was paid with tokens, the tokens go straight back to the wallet automatically, with a refund line in their history.</td></tr>
+    <tr><th>The 24-hour policy</th><td>Terms and the confirmation email say: give at least 24 hours notice to cancel or reschedule. A late cancel or no-show may forfeit the session or its tokens.</td></tr>
+    <tr><th>Elite rates</th><td>For accepted Elite athletes, session prices in tokens follow the family's unlocked rate tier instead of the sticker price. See <a href="#p1-elite">the Elite journey</a>.</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <span class="tag">How the 24-hour policy really works today</span>
+    <p>The system does not enforce the forfeit automatically yet. The online Cancel button works until the session starts and always refunds tokens in full. If a family cancels inside 24 hours and you decide the policy applies, handle it manually: cancel (or let them cancel), then remove the session's tokens with an adjustment in <a href="#p2-tokens-admin">AFC Tokens (admin)</a>, and tell the family why. For a no-show, do not cancel: an admin can mark it cancelled after start, or the coach simply logs the athlete as absent at check-in.</p>
+  </div>
+
+  <div class="faq">
+    <div class="qa"><p class="q">Do bigger loads earn bonus tokens?</p><p class="a"><b>No, never.</b> The old load-bonus ladder is gone. Bigger loads instead unlock cheaper Elite per-session rates for Elite families, and that is the only reward for loading more.</p></div>
+    <div class="qa"><p class="q">Can tokens be refunded to a card?</p><p class="a">Not from the site. Cancellations refund to the wallet. Anything beyond that (cash-out requests) is a manual owner decision outside the platform.</p></div>
+    <div class="qa"><p class="q">Can a family go negative?</p><p class="a">No. If the balance does not cover a price, the token option simply does not appear, and the page suggests loading or paying by card.</p></div>
+    <div class="qa"><p class="q">Where do parents see their history?</p><p class="a">The wallet page lists every load, spend, refund, and reward line with dates and notes.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-elite">
+  <h3>The Elite journey <a class="hash" href="#p1-elite">#</a></h3>
+  <p class="lede">Elite is by acceptance, not by purchase. The road in is the <b>$199 Assessment Pathway</b>. The reward for commitment is a cheaper per-session rate, unlocked by wallet load size.</p>
+
+  <h4>The journey, step by step</h4>
+  <ol class="steps">
+    <li>Family applies on the Elite page and books the <b>$199 Assessment Pathway</b>.</li>
+    <li>The athlete is assessed. Their status moves through: Applied &rarr; Assessment Pathway booked &rarr; Assessment complete, decision pending.</li>
+    <li>Staff make the call on the athlete's profile: <b>Accepted</b>, <b>Waitlist</b>, or <b>Not Yet Fit</b> (routed to Performance instead, with pride intact).</li>
+    <li>On acceptance, the $199 they paid <b>converts to 199 tokens</b> in the family wallet, once per athlete ever. Their first sessions are effectively pre-paid.</li>
+    <li>Accepted athletes can now book Elite formats: Private, 2-Player, 3-Player, and 4-6 Player groups.</li>
+  </ol>
+
+  <h4>The rate ladder (per session, per athlete)</h4>
+  <table class="facts">
+    <tr><th>Format</th><td><b>Drop-in</b></td><td><b>4-pack tier</b></td><td><b>8-pack tier</b></td><td><b>12-pack tier</b></td></tr>
+    <tr><th>Private (1-on-1)</th><td>$120</td><td>$105</td><td>$95</td><td>$85</td></tr>
+    <tr><th>2-Player Group</th><td>$180</td><td>$75</td><td>$70</td><td>$65</td></tr>
+    <tr><th>3-Player Group</th><td>$225</td><td>$60</td><td>$55</td><td>$50</td></tr>
+    <tr><th>4-6 Player Group</th><td>$240</td><td>$50</td><td>$45</td><td>$40</td></tr>
+  </table>
+  <p>A family's tier is set by their <b>single largest wallet load</b>: load $120 or more for drop-in rates, <b>$420+</b> unlocks the 4-pack tier, <b>$760+</b> the 8-pack tier, and <b>$1,020+</b> the 12-pack tier. Loading ahead is the commitment signal, and the discount lives in the rate, not in bonus tokens.</p>
+  <div class="callout">
+    <span class="tag">Where each number lives</span>
+    <p>The public Elite page shows only "from $X, as low as $Y" per format. The load thresholds ($120 / $420 / $760 / $1,020) are dashboard-only: families see their own tier and the next unlock on their wallet page. Do not quote thresholds on the landing page.</p>
+  </div>
+
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/elite-journey.webp" alt="Elite journey" loading="lazy" /><figcaption>The Elite page walks families through the Assessment Pathway.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/elite-rates.webp" alt="Elite rates" loading="lazy" /><figcaption>Public rates table: "Commitment lowers the rate." From and as-low-as only.</figcaption></figure>
+  </div>
+
+  <div class="faq">
+    <div class="qa"><p class="q">A parent asks: is the $199 assessment refundable?</p><p class="a">It converts to 199 tokens if the athlete is accepted, so accepted families lose nothing. For waitlist or not-yet-fit outcomes there is no automatic conversion or refund: that is an owner decision case by case.</p></div>
+    <div class="qa"><p class="q">Who pays in a group session booked once?</p><p class="a">One parent books and pays the whole group price to lock the slot (for example $180 for a 2-Player drop-in), and the families settle up between themselves. Any package tier brings the per-athlete rate down instead.</p></div>
+    <div class="qa"><p class="q">Does the tier ever expire or drop?</p><p class="a">No. It is based on the biggest single load the family has ever made.</p></div>
+    <div class="qa"><p class="q">Does acceptance send the family an email automatically?</p><p class="a"><b>Not yet.</b> A beautiful elite-accepted email exists but is not wired to the status change. Call or email the family personally when you accept an athlete.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-performance">
+  <h3>Performance classes <a class="hash" href="#p1-performance">#</a></h3>
+  <p class="lede">Six weekly classes: three age bands, each with a Beginner and an Advanced class. Flat pricing, no acceptance needed, book in seconds.</p>
+
+  <table class="facts">
+    <tr><th>Age band</th><td><b>Beginner</b></td><td><b>Advanced</b></td></tr>
+    <tr><th>Youngers, 8-10</th><td>First Touch</td><td>Dribbling &amp; Moves</td></tr>
+    <tr><th>Intermediate, 11-13</th><td>Passing &amp; Receiving</td><td>Speed of Play</td></tr>
+    <tr><th>Olders, 14+</th><td>Finishing &amp; Fundamentals</td><td>Game Speed</td></tr>
+  </table>
+  <p><b>Pricing:</b> $40 drop-in, or an 8-pack at $280 which works out to $35 per session. (The 8-pack is displayed today but bought offline until card payments go live.)</p>
+
+  <h4>Who can book which class</h4>
+  <ul class="plain">
+    <li><b>Age band is strict</b> when we know the athlete's birth date: an 11-year-old cannot book First Touch (8-10). The parent gets a calm message pointing to their band's classes.</li>
+    <li>If we do not know the date of birth, Beginner classes allow the booking and staff fix the profile later. No families blocked at the door for missing paperwork.</li>
+    <li><b>Advanced classes need placement.</b> Only staff can flag an athlete as Advanced, on their profile under Clients. Parents cannot self-select it. That includes Elite candidates routed to Performance: set their level and they land in the right class.</li>
+  </ul>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/performance-classes.webp" alt="Performance classes grid" loading="lazy" /><figcaption>The class grid: find the band, pick the level, enroll.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/performance-classes-2.webp" alt="More classes and pricing" loading="lazy" /><figcaption>Every card states who it is for. Weekly day and time are placeholders until Andre locks them.</figcaption></figure>
+  </div>
+  <div class="faq">
+    <div class="qa"><p class="q">A parent insists their 10-year-old is advanced. What do they do?</p><p class="a">They ask us. A coach or admin sets Performance level to Advanced on the athlete's profile, and Dribbling &amp; Moves opens up for them. See <a href="#p2-clients">Clients</a>.</p></div>
+    <div class="qa"><p class="q">When do classes meet?</p><p class="a">The cards currently say "weekly day and time announced soon". Real days and times are pending. Do not promise a specific evening yet.</p></div>
+    <div class="qa"><p class="q">Can a family use tokens for classes?</p><p class="a">Yes. Classes cost 40 tokens at checkout like any other session. Elite rate tiers do not change class prices: those are Elite-only.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-rewards">
+  <h3>Rewards &amp; Refer a Family <a class="hash" href="#p1-rewards">#</a></h3>
+  <p class="lede">Loyalty is automatic: sessions count themselves, tokens land by themselves, and referring a family pays both sides. Parents see it all at Account &rarr; Rewards.</p>
+
+  <h4>Loyalty tokens (per athlete)</h4>
+  <table class="facts">
+    <tr><th>8 completed sessions</th><td>+25 tokens, automatically</td></tr>
+    <tr><th>18 completed sessions</th><td>+50 tokens</td></tr>
+    <tr><th>40 completed sessions</th><td>+100 tokens</td></tr>
+  </table>
+  <p>Each milestone pays once per athlete. "Completed" means the session actually happened: the coach checked the athlete in, or staff marked the booking Completed. The My Progress bar shows exactly how far each athlete is, for example "1 of 8 sessions: 7 to go until 25 tokens".</p>
+
+  <h4>Milestone perks (separate from tokens)</h4>
+  <ul class="plain">
+    <li><b>AFC jersey</b> at 10 completed sessions.</li>
+    <li><b>AFC training booklet</b> at 20 completed sessions.</li>
+    <li><b>Online video session with Coach Sebi</b> at 500 tokens spent.</li>
+    <li><b>AFC merch drop</b> at 1,000 tokens spent.</li>
+  </ul>
+  <p>Perks are earned, not spent: they never touch the wallet balance. When one unlocks, hand it to the athlete at a session. The thresholds are placeholders until Andre finalizes them.</p>
+
+  <h4>Refer a Family</h4>
+  <ol class="steps">
+    <li>The parent opens Rewards and copies their personal invite link (it looks like <code>/signup?ref=CODE</code>).</li>
+    <li>The new family signs up through that link and books.</li>
+    <li>When the new family <b>completes their first paid session</b>, the referrer gets <b>100 tokens</b> and the new family gets <b>25 tokens</b>. Automatically, no forms.</li>
+  </ol>
+  <p>Staff can also record a referral by hand (for word-of-mouth cases) in <a href="#p2-tokens-admin">AFC Tokens (admin)</a>.</p>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/parent-rewards.webp" alt="Rewards page" loading="lazy" /><figcaption>My Progress per athlete, with the 8 / 18 / 40 milestones marked.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/parent-rewards-2.webp" alt="Perks and referral" loading="lazy" /><figcaption>Milestone perks and the Refer a Family link live further down the page.</figcaption></figure>
+  </div>
+  <div class="faq">
+    <div class="qa"><p class="q">Why has the referral not paid out yet?</p><p class="a">It pays when the referred family's first <b>paid</b> session is <b>completed</b>, not when they sign up or book. Check the referral tracker in AFC Tokens: it shows pending versus paid.</p></div>
+    <div class="qa"><p class="q">Do cancelled sessions count toward loyalty?</p><p class="a">No. Only completed sessions count. Pending and confirmed ones do not count until they happen.</p></div>
+    <div class="qa"><p class="q">Can both rewards stack in one wallet?</p><p class="a">Yes. Loyalty and referral tokens are normal tokens: same wallet, same spending power, never expire.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-recurring">
+  <h3>Recurring weekly slots <a class="hash" href="#p1-recurring">#</a></h3>
+  <p class="lede">A family can hold the same weekly time with the same coach, month after month. Staff set it up; the parent just decides each month whether to keep it.</p>
+
+  <h4>How it works</h4>
+  <ol class="steps">
+    <li>Staff create the series from the admin New booking form by ticking <b>"Repeat weekly: lock this slot for the month"</b>. Every remaining week that month books at once, tokens auto-deduct, and the family gets one confirmation email listing all dates.</li>
+    <li>On the parent's account page a <b>Recurring slots</b> card appears: service, weekday and time, coach, and how far it is booked.</li>
+    <li>In the third week of each month (the 15th onward), the system opens a <b>48-hour rebook window</b> and emails the parent: "Keep {athlete}'s weekly slot? 48 hours to rebook."</li>
+    <li>The parent clicks <b>Keep my slot</b> and next month books automatically, tokens deducted at their usual rate. Or they click <b>Let it go</b>.</li>
+    <li>No answer within 48 hours means the series ends quietly and the time goes back on the public calendar.</li>
+  </ol>
+  <figure>
+    <img width="1600" height="1075" src="images/parent-recurring.webp" alt="Recurring slot card" loading="lazy" />
+    <figcaption>The parent's view during the rebook window: the deadline is spelled out, one tap to keep.</figcaption>
+  </figure>
+  <div class="faq">
+    <div class="qa"><p class="q">What if the wallet cannot cover the whole next month?</p><p class="a">The dates still book so the slot is not lost, but they are marked unpaid, and staff follow up to collect. Nothing silently drops.</p></div>
+    <div class="qa"><p class="q">What if one week clashes with something already booked?</p><p class="a">That week is skipped; the rest of the month books normally.</p></div>
+    <div class="qa"><p class="q">Can a parent start a recurring slot themselves?</p><p class="a">Not yet. It is created by staff, usually after a conversation. Parents manage it from their account once it exists.</p></div>
+    <div class="qa"><p class="q">When exactly does the reminder email go out?</p><p class="a">The daily automation runs at 7:00 in the morning Pacific. From the 15th, any series booked only through the current month gets its 48-hour window opened that morning. See <a href="#p3-crons">the two daily automations</a>.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-account">
+  <h3>Athletes, waiver &amp; account management <a class="hash" href="#p1-account">#</a></h3>
+  <p class="lede">The account page (<code>/account</code>) is the family home: athletes, upcoming and past sessions, wallet and rewards shortcuts, and any recurring slots.</p>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/parent-account.webp" alt="Account home" loading="lazy" /><figcaption>The account home: sessions up top, wallet and rewards cards, athletes below.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/parent-athlete-form.webp" alt="Athlete form" loading="lazy" /><figcaption>An athlete profile: the more it holds, the better prepared the coach.</figcaption></figure>
+  </div>
+  <h4>What a parent can do here</h4>
+  <ul class="plain">
+    <li><b>Athletes</b>: add or edit profiles. Name, relation to the account holder, date of birth, photo, sport, position, dominant side, skill level, current team, goals, allergies, medical notes, and an emergency contact. Coaches see what they need to run a safe session.</li>
+    <li><b>Archive</b> an athlete who stopped training (it hides them without deleting history).</li>
+    <li><b>Sessions</b>: see upcoming and past bookings with payment state, and <b>cancel</b> an upcoming one (allowed until its start time; token payments refund instantly).</li>
+    <li><b>Waiver</b>: signed per booking during checkout. The modal forces a full read: the I agree button unlocks only after scrolling to the end. The signed date shows on the athlete's file in admin.</li>
+    <li><b>Email banner</b>: unverified accounts see a resend-verification banner here.</li>
+  </ul>
+  <div class="faq">
+    <div class="qa"><p class="q">Why does age matter so much on the profile?</p><p class="a">Date of birth drives Performance age bands. Without it we let Beginner bookings through, but Advanced placement and strict banding work best with a real birth date.</p></div>
+    <div class="qa"><p class="q">Can parents change their email or phone?</p><p class="a">They edit contact details on their account. If something is stuck, staff can update the client record from admin.</p></div>
+    <div class="qa"><p class="q">Where do they re-read the waiver?</p><p class="a">The Athletic Waiver link in the site footer, any time.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ PART 2 -->
+<h2 class="part-head" id="part2"><span class="kicker">Part 2</span>The admin Control Center</h2>
+
+<section class="doc" id="p2-dashboard">
+  <h3>Dashboard <a class="hash" href="#p2-dashboard">#</a></h3>
+  <p class="lede">Staff sign in at <code>/admin/login</code>. The dashboard is the business at a glance, and every card is clickable.</p>
+  <ul class="plain">
+    <li><b>KPI cards</b>: upcoming sessions (confirmed + pending), revenue this month, revenue all time, total clients, and a "needs attention" count.</li>
+    <li><b>Quick actions</b>: New booking, Add coach, Edit content, Manage availability.</li>
+    <li><b>Needs attention</b>: pending requests with one-tap <b>Confirm</b> or <b>Decline</b>, and unpaid sessions with <b>Mark paid</b>.</li>
+    <li><b>Today</b>: everything happening today, and a recent-bookings activity feed below.</li>
+  </ul>
+  <figure><img width="1600" height="1075" src="images/admin-dashboard.webp" alt="Admin dashboard" loading="lazy" /><figcaption>The owner view. Staff with fewer permissions see fewer cards, same layout.</figcaption></figure>
+  <div class="faq">
+    <div class="qa"><p class="q">What creates a "pending request"?</p><p class="a">Any booking that is not paid yet: a parent who chose to book without paying online, or an admin booking created without marking it paid. Confirm it to lock the slot, or Decline to release it.</p></div>
+    <div class="qa"><p class="q">Why do the revenue numbers not match the payout email?</p><p class="a">Revenue counts money in from families. Coach Pay counts money out to coaches. Different worlds: see <a href="#p2-coachpay">Coach Pay</a>.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-bookings">
+  <h3>Bookings <a class="hash" href="#p2-bookings">#</a></h3>
+  <p class="lede">Every session in the business, as a filterable list or a calendar. This page is where you create, confirm, reschedule, and cancel.</p>
+
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/admin-bookings.webp" alt="Bookings list" loading="lazy" /><figcaption>List view: filters for status, coach, date range, and search by name, email, or phone.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-bookings-calendar.webp" alt="Bookings calendar" loading="lazy" /><figcaption>Calendar view of the same data.</figcaption></figure>
+  </div>
+
+  <h4>The four statuses, and what each one does</h4>
+  <table class="facts">
+    <tr><th>PENDING</th><td>A request. The slot is held but not confirmed. Shows amber, and appears in "needs attention". Confirm or Decline it.</td></tr>
+    <tr><th>CONFIRMED</th><td>On the calendar, slot locked. This is where paid bookings start.</td></tr>
+    <tr><th>COMPLETED</th><td>The session happened. Set automatically when a coach checks the athlete in, or manually by staff. <b>This is the trigger status</b>: it counts toward loyalty milestones and releases referral payouts. See <a href="#p3-completed">what Completed triggers</a>.</td></tr>
+    <tr><th>CANCELLED</th><td>Slot released back to the public calendar. If the booking was paid with tokens, they refund to the wallet automatically, and the family gets a cancellation email.</td></tr>
+  </table>
+
+  <h4>Creating a booking by hand (phone or walk-in)</h4>
+  <ol class="steps">
+    <li>Click <b>New booking</b> (here or on the dashboard). The form is profile-first: <b>pick the athlete</b>. No profile yet? Add the family under Clients first. The form shows the family's token balance and Elite tier as you go.</li>
+    <li>Pick the <b>service</b>. For group formats you can <b>add more athletes</b> into the same slot, up to the service's capacity.</li>
+    <li>Pick <b>date and time</b> from real availability across all coaches for that service, then the <b>coach</b> (auto-selected if only one is free).</li>
+    <li>Optional <b>notes</b>, visible to the assigned coach on their check-in screen.</li>
+    <li>Payment options: <b>Pay with family tokens</b> (auto-deducts), <b>Mark as paid</b> (cash or e-transfer), and <b>Send confirmation email</b> if the family has an email on file. Leave both payment boxes unticked to create it as a pending request.</li>
+  </ol>
+  <figure><img width="1600" height="1075" src="images/admin-new-booking.webp" alt="New booking modal" loading="lazy" /><figcaption>The manual booking form. Athlete first, then service, time, coach, notes, payment.</figcaption></figure>
+
+  <h4>Recurring, reschedule, group</h4>
+  <ul class="plain">
+    <li><b>Repeat weekly</b>: tick the checkbox in the same form to lock the slot for the whole month. See <a href="#p1-recurring">Recurring weekly slots</a> for the monthly renewal loop.</li>
+    <li><b>Reschedule</b>: open a booking and choose Reschedule. Pick a new time (and coach if needed) for the same service, with a "notify the family by email" checkbox.</li>
+    <li><b>Group bookings</b> show one row per athlete in the same slot, so each family's payment and attendance stay individual.</li>
+  </ul>
+
+  <div class="faq">
+    <div class="qa"><p class="q">A parent calls to cancel. Fastest path?</p><p class="a">Find the booking (search by name), open it, set status to Cancelled. Token payments refund themselves and the cancellation email goes out. For card-paid demo bookings, also refund the payment under <a href="#p2-payments">Payments</a>.</p></div>
+    <div class="qa"><p class="q">Can I book someone with no athlete profile?</p><p class="a">Not from the admin form: it is profile-first by design. Add the family and athlete under Clients (takes a minute), then book. Parents booking through the public wizard can still just type a name.</p></div>
+    <div class="qa"><p class="q">Should I mark old sessions Completed by hand?</p><p class="a">Prefer coach check-in: it also computes coach pay. If a coach forgot, use the Unlogged sessions panel in <a href="#p2-coachpay">Coach Pay</a> and log it on their behalf: attendance, pay, and rewards all happen properly.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-checkin">
+  <h3>Session Check-In (the coach flow) <a class="hash" href="#p2-checkin">#</a></h3>
+  <p class="lede">Built phone-first. After a session ends, the coach taps who actually showed up, sees their pay compute live, and confirms. That one tap drives coach pay, completion status, loyalty, and referrals.</p>
+
+  <div class="phones">
+    <figure><img width="750" height="1624" src="images/coach-checkin-list.webp" alt="Check-in list" loading="lazy" /><figcaption>Today plus the last 7 days. The period total sits on top.</figcaption></figure>
+    <figure><img width="750" height="1624" src="images/coach-checkin-preview.webp" alt="Attendance picker" loading="lazy" /><figcaption>Tap everyone who showed up. Pay updates as you tap: 2 attended at $45/hr = $45.</figcaption></figure>
+    <figure><img width="750" height="1624" src="images/coach-checkin-confirmed.webp" alt="Confirmed check-in" loading="lazy" /><figcaption>Confirmed and locked, with a correction window: "Fix attendance until 10:59 AM".</figcaption></figure>
+    <figure><img width="750" height="1624" src="images/coach-checkin-session.webp" alt="Zero attendee state" loading="lazy" /><figcaption>Nobody there? The button says so, and asks again before logging a $0 flagged session.</figcaption></figure>
+  </div>
+
+  <h4>The flow</h4>
+  <ol class="steps">
+    <li>The coach signs in at <code>/admin/login</code> on their phone and lands on <b>Session Check-In</b>. They only ever see their own sessions.</li>
+    <li>Sessions from today and the last 7 days are listed. A session can be checked in once it has finished ("Starts at 3:00 PM, check in once it's done").</li>
+    <li>Tap the session, then <b>tap each athlete who attended</b>. The list starts empty on purpose: attendance is a positive action, never an assumption.</li>
+    <li>The button shows the result live: "Confirm &middot; 2 attended &middot; $45". Tap it. Done.</li>
+    <li>Made a mistake? <b>Fix attendance</b> stays available for 30 minutes (the correction window), then the log locks.</li>
+  </ol>
+
+  <h4>The special cases</h4>
+  <ul class="plain">
+    <li><b>Nobody showed up</b>: the button becomes "Nobody showed up" and asks for a second tap. The session logs as <b>flagged, $0</b>. An admin reviews flagged sessions in Coach Pay and decides what, if anything, gets paid.</li>
+    <li><b>Shadow time (paid standby)</b>: on-site between sessions but not coaching? The coach logs it here: pick the day, set hours in quarter-hour steps, and it pays at their flat shadow rate (Lucas: $25/hr). Deletable within the correction window.</li>
+    <li><b>What attendance does to the booking</b>: attended athletes' bookings flip to <b>Completed</b> (which counts loyalty and referrals). Un-attended ones stay as they were, so staff can follow up.</li>
+  </ul>
+  <div class="callout">
+    <span class="tag">Why attendance matters</span>
+    <p>Coach pay follows <b>real attendance, not the booking sheet</b>. Three booked, two showed: the coach is paid the 2-athlete rate. The rate snapshot is taken at check-in time, so later rate changes never rewrite past pay.</p>
+  </div>
+  <div class="faq">
+    <div class="qa"><p class="q">A coach missed the 30-minute window with a mistake inside. Now what?</p><p class="a">An admin fixes it in Coach Pay: open the session's Detail, override attendance or duration with a note. Overrides recompute from the original check-in rates.</p></div>
+    <div class="qa"><p class="q">A coach forgot to check in entirely.</p><p class="a">The slot appears in Coach Pay's "Unlogged sessions" panel for 60 days. An admin logs it on the coach's behalf with the same attendance flow and the coach's own rates.</p></div>
+    <div class="qa"><p class="q">Can a coach see another coach's sessions or pay?</p><p class="a">No. Coach logins are scoped to their own data, and the Coach Pay section is never granted to coaches. See <a href="#p2-settings">permissions</a>.</p></div>
+    <div class="qa"><p class="q">Can the correction window be longer than 30 minutes?</p><p class="a">Yes, it is a setting: Coach Pay &rarr; Payout settings &rarr; correction window.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-coaches">
+  <h3>Coaches <a class="hash" href="#p2-coaches">#</a></h3>
+  <p class="lede">The public coaching roster and each coach's login live here. Cards drag to reorder; the order is what the public site shows.</p>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/admin-coaches.webp" alt="Coaches roster" loading="lazy" /><figcaption>The roster. Active coaches appear on the public site; inactive ones (like Lucas today) stay internal.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-coach-form.webp" alt="Coach form" loading="lazy" /><figcaption>Edit a coach: photo, title, bio, specialties, and which services they offer.</figcaption></figure>
+  </div>
+  <h4>Creating a coach login</h4>
+  <ol class="steps">
+    <li>Open the coach's card and turn on <b>login access</b> with their email and a starting password.</li>
+    <li>The <b>Coach permission template</b> applies automatically: manage their own check-in and availability, view their own bookings and clients, nothing else, own data only.</li>
+    <li>Hand them the email and password. They sign in at <code>/admin/login</code> on their phone, and Session Check-In is right there.</li>
+  </ol>
+  <div class="faq">
+    <div class="qa"><p class="q">What does the Active toggle actually do?</p><p class="a">Active coaches appear on the public site and in the booking wizard's coach step. Inactive coaches keep their history, availability, and pay profile, but the public never sees them. Lucas and Ayman are seeded inactive until Andre says otherwise.</p></div>
+    <div class="qa"><p class="q">Which services can a coach be booked for?</p><p class="a">Only the ones ticked on their card. The wizard's coach filter starts from that list, then narrows to who is free.</p></div>
+    <div class="qa"><p class="q">Do coach logins see money?</p><p class="a">They see their own live pay preview at check-in and their own period total. They cannot open Coach Pay, Payments, or anyone else's numbers.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-availability">
+  <h3>Availability <a class="hash" href="#p2-availability">#</a></h3>
+  <p class="lede">When each coach can be booked: weekly hours plus days off. The public wizard's calendar is built from this, minus existing bookings.</p>
+  <figure><img width="1600" height="1075" src="images/admin-availability.webp" alt="Availability" loading="lazy" /><figcaption>Weekly hours per coach (15-minute steps) and blackout dates below.</figcaption></figure>
+  <ul class="plain">
+    <li><b>Weekly hours</b>: time blocks per weekday, per coach. The demo seed is Mon-Fri 3:00 to 7:00 PM and Saturday 9:00 to 1:00.</li>
+    <li><b>Days off (blackouts)</b>: single dates that override the weekly pattern, for holidays or travel. If a blackout lands on a day with existing bookings, the page warns you so you can reschedule the families.</li>
+    <li>Coaches with logins manage <b>their own</b> hours and days off from this same page; they cannot touch anyone else's.</li>
+  </ul>
+  <div class="faq">
+    <div class="qa"><p class="q">Why is a time not showing in the public wizard?</p><p class="a">Either the coach has no availability block covering it, a blackout hides that day, the slot is already booked to capacity, or the coach does not offer that service. Check in that order.</p></div>
+    <div class="qa"><p class="q">Half a day off?</p><p class="a">Trim the weekly hours for that weekday, or add the blackout and rebook only the affected sessions. Blackouts are whole days.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-services">
+  <h3>Services &amp; Pricing <a class="hash" href="#p2-services">#</a></h3>
+  <p class="lede">The catalog: everything bookable, with price, duration, and capacity. Booking pages, checkout, and token prices all read from here.</p>
+  <figure><img width="1600" height="1075" src="images/admin-services.webp" alt="Services" loading="lazy" /><figcaption>The catalog. Toggle Active to pull something off the menu without deleting it.</figcaption></figure>
+  <ul class="plain">
+    <li>Each service has a <b>name, kind, duration, price, capacity, and description</b>. Capacity 1 is a private; more than 1 makes it a group with that many spots per slot.</li>
+    <li><b>Kinds</b>: Private, Group, Camp, Foundations. The kind drives how it behaves in class rosters, client buckets, and coach pay (camps pay a flat coach rate).</li>
+    <li>Elite formats are <b>acceptance-gated</b>, and Performance classes carry their age band and level. Those flags come with the seeded catalog; day-to-day edits here are name, price, duration, capacity, description, and active.</li>
+    <li>Price changes apply to <b>new bookings only</b>. Existing bookings keep the price they were made at.</li>
+  </ul>
+  <div class="faq">
+    <div class="qa"><p class="q">Can I retire a service safely?</p><p class="a">Toggle it inactive. History stays intact, nothing new can book it. Deleting is not the way.</p></div>
+    <div class="qa"><p class="q">Where do Elite per-session token prices come from?</p><p class="a">Not from this page. Elite formats price from the family's rate tier at checkout: see <a href="#p1-elite">the Elite journey</a>. The sticker price here is the drop-in rate.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-clients">
+  <h3>Clients &amp; Leads <a class="hash" href="#p2-clients">#</a></h3>
+  <p class="lede">Every family, bucketed by where they are in the AFC journey. Names open a full profile in a new tab, so you can keep the list open while you work.</p>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/admin-clients.webp" alt="Clients list" loading="lazy" /><figcaption>The bucket bar: All, Foundations, Performance, Elite, Not booked, with live counts.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-client-profile.webp" alt="Client profile" loading="lazy" /><figcaption>A full profile opens in its own tab: contact, athletes, wallet, bookings, and more.</figcaption></figure>
+  </div>
+  <h4>The buckets</h4>
+  <table class="facts">
+    <tr><th>All</th><td>Everyone with an account or a booking.</td></tr>
+    <tr><th>Foundations</th><td>Families with Foundations program bookings.</td></tr>
+    <tr><th>Performance</th><td>Families booked into the six classes (or legacy open groups).</td></tr>
+    <tr><th>Elite</th><td>Families with Elite-gated bookings, or any athlete anywhere in the Elite journey (applied through accepted or waitlisted).</td></tr>
+    <tr><th>Not booked</th><td>Accounts with zero active bookings: your re-engagement call list.</td></tr>
+  </table>
+  <h4>Inside a profile</h4>
+  <ul class="plain">
+    <li><b>Contact</b> details and their athletes, each with Elite status and Performance level controls.</li>
+    <li><b>Elite decisions</b>: set the athlete's stage (Applied, Assessment booked, Assessment complete, Accepted, Waitlist, Not Yet Fit). Choosing <b>Accepted</b> offers the $199-to-199-tokens conversion, which can only ever happen once per athlete.</li>
+    <li><b>Performance placement</b>: flip an athlete to Advanced to unlock the advanced class in their age band.</li>
+    <li><b>Wallet</b>: balance, full token history, and a manual adjustment button (see <a href="#p2-tokens-admin">AFC Tokens</a>).</li>
+    <li><b>Bookings</b> (upcoming and past), <b>coaches they have trained with</b>, <b>reward tokens earned</b>, <b>products</b>, and the <b>waiver</b> date.</li>
+    <li><b>Coach notes</b> ride along on bookings (the notes field in the booking form) so the assigned coach sees context at check-in.</li>
+  </ul>
+  <h4>Leads</h4>
+  <p>New-family signals from the contact form, Elite applications, the path finder quiz, signups, and guest bookings collect at <b>New leads</b> (linked from the Clients page). Each shows source and details, so you can follow up before they become clients.</p>
+  <figure><img width="1600" height="1075" src="images/admin-leads.webp" alt="Leads" loading="lazy" /><figcaption>The leads inbox: who asked, from where, and what they said.</figcaption></figure>
+  <div class="faq">
+    <div class="qa"><p class="q">How do I add a brand-new family by phone?</p><p class="a">Clients &rarr; add the family with contact info, add the athlete, then book from Bookings. The parent can claim online access later; their history is already attached.</p></div>
+    <div class="qa"><p class="q">Who should work the "Not booked" bucket?</p><p class="a">Whoever owns re-engagement that week. It is exactly the list of families who know AFC but have nothing scheduled.</p></div>
+    <div class="qa"><p class="q">Accepted the wrong athlete by mistake?</p><p class="a">Set the status back. The 199-token conversion, if it already ran, must be unwound manually with a token adjustment. It is one-per-athlete forever, so fix it before it is spent.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-payments">
+  <h3>Payments &amp; refunds <a class="hash" href="#p2-payments">#</a></h3>
+  <p class="lede">Every payment in one list: filter by status and date, search by family, export CSV. Totals for gross, refunded, and net sit on top.</p>
+  <figure><img width="1600" height="1075" src="images/admin-payments.webp" alt="Payments" loading="lazy" /><figcaption>The payments ledger with filters and export.</figcaption></figure>
+  <ul class="plain">
+    <li><b>Where payments come from</b>: token payments (the wallet), demo card payments, and manual "mark as paid" entries for cash or e-transfer.</li>
+    <li><b>Mark paid</b>: on any unpaid booking (dashboard, bookings list, or here). Use it when money changed hands outside the site.</li>
+    <li><b>Refund</b> (card and manual payments): the Refund button flips the payment to Refunded and cancels the booking (unless the session already happened), and the family is emailed.</li>
+    <li><b>Token refunds</b> are not on this page: cancelling a token-paid booking refunds the wallet automatically. For anything unusual, adjust the wallet directly in <a href="#p2-tokens-admin">AFC Tokens</a>.</li>
+  </ul>
+  <div class="callout warn">
+    <span class="tag">Demo mode</span>
+    <p>Card checkout is simulated until Stripe lands. Any card number "succeeds" (there is no real charge), and a card ending in 0000 plays the decline path. Say "demo checkout, no real charge" when walking anyone through it, and treat real money as cash/e-transfer plus Mark paid for now.</p>
+  </div>
+  <div class="faq">
+    <div class="qa"><p class="q">A family paid cash for a pending booking. What do I click?</p><p class="a">Mark paid on that booking (dashboard "Unpaid sessions" is fastest). It becomes confirmed and counts in revenue.</p></div>
+    <div class="qa"><p class="q">Refund a completed session?</p><p class="a">The refund flow keeps a completed booking completed (the session happened) while refunding the money. Decide case by case; for token payments use a wallet adjustment with a note.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-coachpay">
+  <h3>Coach Pay <a class="hash" href="#p2-coachpay">#</a></h3>
+  <p class="lede">The whole payout machine: rate profiles per coach, every checked-in session priced, a twice-monthly payout email, and the tools to correct honest mistakes. Owner (and Sahand) only; coaches never see this page.</p>
+
+  <h4>How a coach's pay is computed</h4>
+  <table class="facts">
+    <tr><th>Regular session</th><td>Base rate + (athletes attended &times; per-athlete bonus), capped. A 1-athlete session pays base only. Lucas's reference profile: $35 base, +$5 per athlete, $80 cap. So 1 athlete $35/hr, 2 &rarr; $45, 4 &rarr; $55, 8 &rarr; $75, 10+ caps at $80.</td></tr>
+    <tr><th>Group bonus off</th><td>Flat base regardless of headcount: the Foundations class model.</td></tr>
+    <tr><th>Camp</th><td>Flat camp rate (bonus only if that coach's camp-bonus toggle is on).</td></tr>
+    <tr><th>Shadow time</th><td>Flat shadow rate for paid standby, logged by the coach in quarter-hours. Lucas: $25/hr.</td></tr>
+    <tr><th>Pay per session</th><td>Hourly rate &times; session length. A 90-minute session at $55/hr pays $82.50.</td></tr>
+  </table>
+  <p><b>Attendance is the input, not bookings.</b> Rates are snapshotted at check-in, so changing a coach's rates later never rewrites history: changes apply to future check-ins only.</p>
+
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/admin-coach-pay.webp" alt="Coach pay overview" loading="lazy" /><figcaption>Payout summary cards for the current and previous period, with send controls.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-coach-pay-rates.webp" alt="Rate profiles" loading="lazy" /><figcaption>Rate profiles. A profile cannot go active until every rate is filled. Only Lucas is active today.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-coach-pay-sessions.webp" alt="Sessions table" loading="lazy" /><figcaption>Completed sessions: date and coach filters, CSV export, and a Detail modal per row.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-coach-pay-unlogged.webp" alt="Unlogged panel" loading="lazy" /><figcaption>Unlogged sessions from the past 60 days: log them on the coach's behalf.</figcaption></figure>
+  </div>
+
+  <h4>The payout email</h4>
+  <ul class="plain">
+    <li>Fires automatically on the <b>15th</b> (covering the 1st to the 15th) and the <b>30th or last day of the month</b> (covering the 16th to month-end), at about 8:30 in the morning Pacific.</li>
+    <li>Goes to the payout recipient (default <code>dre@afsoccer.club</code>) with an optional CC (Sahand's address, once set). One table per coach grouped by session type and rate, plus a grand total. Andre pays manually from it; the system never moves money.</li>
+    <li><b>Late additions</b>: a session checked in after its period's email already went out is not lost. It rides the next email in its own "late additions" section. Nothing double-reports, nothing disappears.</li>
+    <li>Buttons on this page: <b>Send test to me</b> (a preview to your own inbox, does not mark anything as reported), <b>Send now for real</b> (guarded, marks sessions reported), and <b>Print</b> for a PDF copy.</li>
+  </ul>
+
+  <h4>Fixing things</h4>
+  <ul class="plain">
+    <li><b>Flagged sessions</b> (zero attendees) wait in the sessions table for an admin decision.</li>
+    <li><b>Override</b>: open a session's Detail to correct attendance or duration with a note. Pay recomputes from the check-in-time rates.</li>
+    <li><b>Void</b>: kills a bad log and frees the slot to be re-logged. Blocked once the session has been payout-emailed, to keep the books honest.</li>
+    <li><b>Payout settings</b>: recipient, CC, and the coach correction window (default 30 minutes).</li>
+  </ul>
+  <div class="faq">
+    <div class="qa"><p class="q">Why is a coach's session missing from the payout preview?</p><p class="a">Either it was never checked in (look in Unlogged sessions), it is flagged at $0 awaiting review, or it was checked in after the email went out and will ride the next one as a late addition.</p></div>
+    <div class="qa"><p class="q">We changed Lucas's rates mid-period. What happens?</p><p class="a">Sessions already checked in keep their snapshot rates; new check-ins use the new rates. The payout email shows them as separate honest rows.</p></div>
+    <div class="qa"><p class="q">Why will the other coaches' profiles not activate?</p><p class="a">Every rate field must be filled first, on purpose. Andre still owes rates for Sebi, Sebass, Ayman, Sergio, and Mikey: see <a href="#p4-limits">Known limits</a>.</p></div>
+    <div class="qa"><p class="q">Does the payout email pay anyone automatically?</p><p class="a">No. It is a report. Andre pays coaches manually however he pays them today.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-tokens-admin">
+  <h3>AFC Tokens (admin) <a class="hash" href="#p2-tokens-admin">#</a></h3>
+  <p class="lede">The reward engine's control room: the referral tracker, every reward token issued, load amounts, and manual balance adjustments.</p>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/admin-tokens.webp" alt="Tokens admin" loading="lazy" /><figcaption>Referrals: who referred whom, pending versus paid out, with dates.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-tokens-2.webp" alt="Reward ledger" loading="lazy" /><figcaption>Every reward token issued, with its trigger. Load amounts below are locked to 1:1.</figcaption></figure>
+  </div>
+  <ul class="plain">
+    <li><b>Referral tracker</b>: each referred family with status "Pending first session" or "Paid out". The payout (100 + 25) fires by itself when their first paid session completes.</li>
+    <li><b>Record referral</b>: for word-of-mouth cases with no link. Pick the referrer and the new family; the tracker takes it from there.</li>
+    <li><b>Reward tokens issued</b>: an audit list of every referral and loyalty grant, with family, amount, and trigger.</li>
+    <li><b>Load amounts editor</b>: change the quick-pick amounts parents see. Whatever you enter stays 1 token per dollar; the editor cannot create bonuses.</li>
+    <li><b>Manual adjustments</b> live on the client profile (Clients &rarr; family &rarr; wallet &rarr; Adjust): add or remove tokens with a note. Use it for goodwill, corrections, late-cancel forfeits, and CoachIQ migration credits.</li>
+  </ul>
+  <div class="faq">
+    <div class="qa"><p class="q">A family says "we referred the Smiths, where are our 100 tokens?"</p><p class="a">Open the tracker. If the Smiths show Pending, their first paid session has not completed yet. If they are not listed at all, the link was not used: record the referral manually and it will pay on their next completed paid session.</p></div>
+    <div class="qa"><p class="q">Can I hand out tokens as a goodwill gesture?</p><p class="a">Yes: wallet adjustment on the client profile, with a note that says why. It shows in their history like any other line.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-emails">
+  <h3>Email Log &amp; templates <a class="hash" href="#p2-emails">#</a></h3>
+  <p class="lede">Every email the platform sends is logged here with its delivery status. Six core templates are editable in place; the full designed set lives in the email gallery.</p>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/admin-emails.webp" alt="Email log" loading="lazy" /><figcaption>The outbound log: type, status, recipient, subject, and any error.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-emails-2.webp" alt="Templates" loading="lazy" /><figcaption>Editable templates with merge fields and a reset-to-default.</figcaption></figure>
+  </div>
+  <ul class="plain">
+    <li><b>The log</b> shows the last 100 sends: sent, failed, or simulated (when no email key is configured). Failures show the provider's error, which is how you spot the sandbox limit.</li>
+    <li><b>Editable here</b>: booking confirmation, receipt, session reminder, cancellation, email verification, and password reset. Merge fields like <code>{{customerName}}</code> fill themselves.</li>
+    <li><b>Everything else</b> (welcome, guest account, Elite set, rewards set, payout, and more) ships from the designed Royal Crest set. Review every one of the 34 designs in the <a href="https://afcemails.netlify.app" target="_blank" rel="noopener">email review gallery</a>, with each email's trigger and copy.</li>
+    <li>There is no "compose an email" button: everything is event-driven. See <a href="#p3-emails">which emails go out, and when</a>.</li>
+  </ul>
+  <div class="faq">
+    <div class="qa"><p class="q">A parent says they got nothing. First check?</p><p class="a">This log. If the row says failed with a sandbox error, that is the known Resend limit on the demo (only the test inbox receives). If there is no row at all, the event did not fire: check the booking or account state.</p></div>
+    <div class="qa"><p class="q">Can we change the wording of the confirmation email?</p><p class="a">Yes, right on this page. Keep the merge fields intact and send yourself a test booking to see it live.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-content">
+  <h3>Site Content <a class="hash" href="#p2-content">#</a></h3>
+  <p class="lede">The marketing site's words and pictures, editable without a developer. Homepage, About, Booking, Pricing, Contact, Elite, Foundations, and shared site-wide copy.</p>
+  <figure><img width="1600" height="1075" src="images/admin-content.webp" alt="Site content" loading="lazy" /><figcaption>Pick a page, edit its sections, save. Changes are live immediately.</figcaption></figure>
+  <ul class="plain">
+    <li>Each page is broken into sections: heroes, headlines, body copy, stats, testimonials, pathway cards. Images upload right in the editor.</li>
+    <li><b>Saving publishes instantly</b>: the public site updates on the next page load. No deploy, no waiting.</li>
+    <li>Clearing a field back to empty restores the built-in default copy for that spot.</li>
+    <li>Coaches, services, prices, business contact, and email templates are managed on their own pages, not here.</li>
+  </ul>
+  <div class="faq">
+    <div class="qa"><p class="q">Can I break the site from here?</p><p class="a">Not structurally. You are editing words and images inside a fixed design. Worst case, clear the field and the default comes back.</p></div>
+    <div class="qa"><p class="q">Who should have this?</p><p class="a">Anyone trusted with the public voice. It is a permission section like any other, so a staff login can have it or not.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-roster">
+  <h3>Class Roster <a class="hash" href="#p2-roster">#</a></h3>
+  <p class="lede">Who is coming to class: every Foundations and Performance class instance with its enrolled athletes, ages, parent contacts, and booking status.</p>
+  <figure><img width="1600" height="1075" src="images/admin-roster.webp" alt="Class roster" loading="lazy" /><figcaption>Grouped by class and start time. Print it or read it off a phone at the field.</figcaption></figure>
+  <div class="faq">
+    <div class="qa"><p class="q">What shows up here versus Bookings?</p><p class="a">Roster only shows class-type sessions (Foundations and the six Performance classes), grouped per class meeting. Bookings shows everything individually.</p></div>
+    <div class="qa"><p class="q">Mikey wants his Foundations list for Saturday. Fastest path?</p><p class="a">This page. It is grouped and ordered by start time, with parent phone and email right on the row.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-settings">
+  <h3>Settings &amp; the permission model <a class="hash" href="#p2-settings">#</a></h3>
+  <p class="lede">Business settings plus the team's admin logins. The permission model is simple: an owner sees everything; staff see exactly what you grant.</p>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/admin-settings.webp" alt="Settings" loading="lazy" /><figcaption>Settings: business info and the admin team panel (owner only).</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-invite.webp" alt="Invite admin" loading="lazy" /><figcaption>Inviting a staff login: pick a template, adjust sections if needed.</figcaption></figure>
+  </div>
+  <h4>How permissions work</h4>
+  <ul class="plain">
+    <li><b>Roles</b>: OWNER (Andre) has everything, always. STAFF logins carry a permission set. Parents are clients and can never reach <code>/admin</code>.</li>
+    <li><b>Sections</b>: each admin area (bookings, check-in, coaches, availability, services, clients, payments, coach pay, tokens, emails, content) is granted as <b>none</b>, <b>view</b>, or <b>manage</b>.</li>
+    <li><b>Scope</b>: <b>all data</b>, or <b>own data</b> (a coach sees only sessions and clients tied to them).</li>
+    <li><b>Templates</b>: <b>Coach</b> = own check-in and availability, view own bookings and clients, nothing else. <b>Front desk</b> = manage bookings and clients, view availability, services, payments, and coaches, across all data. Or hand-pick sections for a custom role.</li>
+    <li>Coach Pay is deliberately <b>never in the Coach template</b>. Grant it only to Andre and Sahand.</li>
+    <li>Everyone can change their own password here (staff see "My account" instead of full Settings).</li>
+  </ul>
+  <div class="faq">
+    <div class="qa"><p class="q">What should Sahand's login be?</p><p class="a">Front desk template plus Coach Pay (view or manage as Andre prefers) is the intended shape: bookings, clients, and the payout machinery, without site content or settings unless wanted.</p></div>
+    <div class="qa"><p class="q">What does Mikey need?</p><p class="a">If he only runs Foundations sessions: a coach login from the Coaches page (check-in plus his own availability). Add Class Roster visibility by granting bookings view if he wants his lists online.</p></div>
+    <div class="qa"><p class="q">Can two owners exist?</p><p class="a">Yes, the team panel can promote another owner. Keep it to people who genuinely need everything.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ PART 3 -->
+<h2 class="part-head" id="part3"><span class="kicker">Part 3</span>Behind the scenes</h2>
+
+<section class="doc" id="p3-emails">
+  <h3>Which emails go out, and when <a class="hash" href="#p3-emails">#</a></h3>
+  <p class="lede">Every design exists in the <a href="https://afcemails.netlify.app" target="_blank" rel="noopener">email review gallery</a> (all 34, with copy and triggers). Here is what actually fires automatically today.</p>
+  <table class="facts">
+    <tr><th>Moment</th><td><b>Email</b></td></tr>
+    <tr><th>Signup starts</th><td>Email verification (the 6-digit code)</td></tr>
+    <tr><th>Account created</th><td>Welcome (or "Welcome + first booking" if they created it while booking and paid)</td></tr>
+    <tr><th>Guest books</th><td>Booking confirmation + receipt, plus a "create your account" invitation</td></tr>
+    <tr><th>Booking paid</th><td>Booking confirmation + receipt (with the add-to-calendar link and the 24-hour policy)</td></tr>
+    <tr><th>Booking cancelled / refunded</th><td>Cancellation notice</td></tr>
+    <tr><th>Password reset requested</th><td>Password reset code</td></tr>
+    <tr><th>Recurring month books</th><td>One confirmation listing all the month's dates and tokens spent</td></tr>
+    <tr><th>Rebook window opens</th><td>"Keep the slot? 48 hours" reminder</td></tr>
+    <tr><th>15th and 30th, 8:30 AM Pacific</th><td>Coach payout summary to Andre (CC Sahand once set)</td></tr>
+  </table>
+  <p><b>Built and designed but not yet automated</b> (do not promise these): the 24-hour session reminder, post-session thank-you series, win-back, low balance, tokens-loaded and tokens-returned receipts, Elite acceptance, assessment follow-up, contact auto-reply, and the subscription pair (on hold with the auto-reload decision).</p>
+  <div class="faq">
+    <div class="qa"><p class="q">Parents ask if they get a reminder before the session.</p><p class="a">Not yet, and do not promise it. The reminder email is designed and waiting on its automation. The confirmation email's add-to-calendar link is the current answer.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p3-crons">
+  <h3>The two daily automations <a class="hash" href="#p3-crons">#</a></h3>
+  <p class="lede">Two jobs run every day on Netlify, both verified live. Times are Pacific.</p>
+  <table class="facts">
+    <tr><th>7:00 AM daily</th><td><b>Recurring slots</b>: from the 15th, opens the 48-hour rebook window for any series booked only through this month and sends the reminder email. Every day, it also quietly ends any series whose window expired and releases those times to the public calendar.</td></tr>
+    <tr><th>8:30 AM daily</th><td><b>Coach payout</b>: checks whether today is a send day (the 15th, or the 30th slash last day of the month). On send days it builds the payout tables, emails them once, and stamps the included sessions as reported. Other days it does nothing.</td></tr>
+  </table>
+  <div class="faq">
+    <div class="qa"><p class="q">What happens if a job fails one morning?</p><p class="a">Both are safe to run again: the payout dedupes against the email log, and the recurring job re-checks state. The next successful run picks everything up. If something looks stuck, tell Trevor.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p3-completed">
+  <h3>What marking a session "Completed" triggers <a class="hash" href="#p3-completed">#</a></h3>
+  <p class="lede">Completed is the platform's payday moment. It fires whether the coach checked the athlete in or staff set the status by hand.</p>
+  <ol class="steps">
+    <li><b>Loyalty count</b>: the athlete's completed-session total ticks up. Crossing 8, 18, or 40 automatically drops 25, 50, or 100 tokens into the family wallet, each milestone once per athlete.</li>
+    <li><b>Referral payout</b>: if this family was referred and this is their first completed <b>paid</b> session, the referrer gets 100 tokens and this family gets 25. The referral flips to Paid out in the tracker.</li>
+    <li><b>Coach pay</b>: only check-in (or an admin logging on the coach's behalf) creates the priced session log. Flipping a status by hand does not pay a coach, which is why the Unlogged panel exists.</li>
+  </ol>
+  <div class="callout">
+    <span class="tag">Rule of thumb</span>
+    <p>Let check-in do the completing. It gets attendance, coach pay, and rewards right in one tap. Set Completed by hand only when you know the session happened and coach pay is already handled.</p>
+  </div>
+</section>
+
+<!-- ============================================================ PART 4 -->
+<h2 class="part-head" id="part4"><span class="kicker">Part 4</span>The honesty section</h2>
+
+<section class="doc" id="p4-limits">
+  <h3>Known limits: what not to promise yet <a class="hash" href="#p4-limits">#</a></h3>
+  <p class="lede">The platform is feature-complete for v3, and a few edges are intentionally waiting on decisions or third-party setup. Knowing these keeps every conversation honest.</p>
+  <table class="facts">
+    <tr><th>Card payments</th><td><b>Demo mode.</b> No real card is ever charged (a number ending 0000 simulates a decline). Real money moves by tokens loaded via cash or e-transfer, and Mark paid. Stripe is the planned fix.</td></tr>
+    <tr><th>Outbound email</th><td><b>Sandbox-limited</b> until the sending domain is verified with Resend. On the demo, only the test inbox actually receives; other addresses log as failed in the Email Log. From-address still shows the Resend onboarding domain.</td></tr>
+    <tr><th>Coach rates</th><td>Only Lucas's pay profile is filled and active (his rates are the worked reference). Sebi, Sebass, Ayman, Sergio, and Mikey wait on Andre's numbers, and their sessions cannot be pay-logged until then.</td></tr>
+    <tr><th>Session reminder emails</th><td>Designed, not yet automated. Do not promise "you'll get a reminder the day before".</td></tr>
+    <tr><th>Elite acceptance email</th><td>Designed, not wired. Acceptance is a personal call or email from the team today.</td></tr>
+    <tr><th>Performance class schedule</th><td>Class cards say "weekly day and time announced soon". Days, times, and the 8-pack purchase flow (waits on Stripe) are pending.</td></tr>
+    <tr><th>Perk thresholds</th><td>Jersey at 10 sessions, booklet at 20, Sebi video at 500 tokens spent, merch at 1,000: placeholders until Andre confirms.</td></tr>
+    <tr><th>Missed-emails inbox</th><td>Replies to our emails land in the regular inbox, not in the admin. The in-admin inbox and direct reply are deferred pending an inbound-email decision.</td></tr>
+    <tr><th>Google Calendar</th><td>No two-way sync. Every confirmation email has an add-to-calendar link, which covers most asks.</td></tr>
+    <tr><th>Subscriptions / auto-reload</th><td>On hold pending the bonus decision. Nothing to sell yet.</td></tr>
+  </table>
+  <p>The demo database is shared: whatever you create while practicing, prefix it with <code>ZZTest</code> and delete it after.</p>
+</section>
+
+<!-- ============================================================ PART 5 -->
+<h2 class="part-head" id="part5"><span class="kicker">Part 5</span>Quick reference</h2>
+
+<section class="doc" id="p5-cheatsheet">
+  <h3>Cheat sheet &amp; key numbers <a class="hash" href="#p5-cheatsheet">#</a></h3>
+  <table class="facts">
+    <tr><th>Demo owner login</th><td><code>andre@afsoccer.club</code> / <code>demo1234</code> at <code>/admin/login</code></td></tr>
+    <tr><th>Demo parent login</th><td><code>parent@example.com</code> / <code>demo1234</code> at <code>/login</code></td></tr>
+    <tr><th>Tokens</th><td>$1 = 1 token, flat, never expire. Loads: $100 / $250 / $500 / $1,000 / custom $20 to $10,000.</td></tr>
+    <tr><th>Elite ladder</th><td>Private 120 / 105 / 95 / 85 &middot; 2P 180 / 75 / 70 / 65 &middot; 3P 225 / 60 / 55 / 50 &middot; 4-6P 240 / 50 / 45 / 40 (drop-in / 4-pack / 8-pack / 12-pack, per session)</td></tr>
+    <tr><th>Elite tier unlocks</th><td>Largest single load: $120 / $420 / $760 / $1,020. Dashboard-only numbers.</td></tr>
+    <tr><th>Assessment</th><td>$199, converts to 199 tokens on acceptance, once per athlete ever.</td></tr>
+    <tr><th>Performance</th><td>6 classes (bands 8-10, 11-13, 14+; Beginner and Advanced each). $40 drop-in, 8-pack $280 ($35/session). Advanced needs staff placement.</td></tr>
+    <tr><th>Loyalty</th><td>8 / 18 / 40 completed sessions &rarr; 25 / 50 / 100 tokens, per athlete, automatic.</td></tr>
+    <tr><th>Referral</th><td>100 to the referrer, 25 to the new family, on the new family's first completed paid session.</td></tr>
+    <tr><th>Recurring window</th><td>From the 15th: 48 hours to keep the slot, then it releases. Reminder at 7:00 AM Pacific.</td></tr>
+    <tr><th>Coach pay (Lucas ref.)</th><td>$35 base +$5/athlete, $80 cap &middot; shadow $25 &middot; camp $35. 1 athlete = base only.</td></tr>
+    <tr><th>Payout email</th><td>15th (1-15) and 30th/last day (16-end), ~8:30 AM Pacific, to dre@ (CC Sahand when set).</td></tr>
+    <tr><th>Correction window</th><td>30 minutes after check-in (editable in Coach Pay payout settings).</td></tr>
+    <tr><th>Cancellation policy</th><td>24 hours notice per terms; online cancel refunds tokens until start time; late-cancel forfeits are a manual staff step today.</td></tr>
+    <tr><th>Booking horizon</th><td>Parents can book up to 6 months ahead. Login lasts 30 days.</td></tr>
+    <tr><th>All emails</th><td><a href="https://afcemails.netlify.app" target="_blank" rel="noopener">afcemails.netlify.app</a>: all 34 designs, triggers, and copy.</td></tr>
+  </table>
+  <p class="backtop"><a href="#top" onclick="window.scrollTo(0,0);return false;">Back to top &uarr;</a></p>
+</section>
+
+</main>
+</div>
+
+<script>
+(function () {
+  var sidebar = document.getElementById("sidebar");
+  var menuBtn = document.getElementById("menuBtn");
+  menuBtn.addEventListener("click", function () { sidebar.classList.toggle("open"); });
+  document.querySelectorAll("nav.toc a").forEach(function (a) {
+    a.addEventListener("click", function () { sidebar.classList.remove("open"); });
+  });
+
+  // ---------- scrollspy ----------
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll("nav.toc a"));
+  var byId = {};
+  tocLinks.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
+  var sections = Array.prototype.slice.call(document.querySelectorAll("section.doc"));
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        tocLinks.forEach(function (a) { a.classList.remove("active"); });
+        var link = byId[e.target.id];
+        if (link) link.classList.add("active");
+      }
+    });
+  }, { rootMargin: "-15% 0px -70% 0px" });
+  sections.forEach(function (s) { spy.observe(s); });
+
+  // ---------- search ----------
+  var input = document.getElementById("search");
+  var meta = document.getElementById("searchMeta");
+  var clearBtn = document.getElementById("searchClear");
+  var parts = Array.prototype.slice.call(document.querySelectorAll("h2.part-head"));
+  var hero = document.querySelector(".hero");
+
+  function clearHighlights() {
+    if (window.CSS && CSS.highlights) CSS.highlights.delete("search-hits");
+  }
+  function safeHighlight(q) {
+    try {
+      if (!(window.CSS && CSS.highlights)) return;
+      var ranges = [];
+      sections.forEach(function (sec) {
+        if (sec.style.display === "none") return;
+        var walker = document.createTreeWalker(sec, NodeFilter.SHOW_TEXT);
+        var node;
+        while ((node = walker.nextNode())) {
+          var text = node.textContent.toLowerCase();
+          var i = 0;
+          while ((i = text.indexOf(q, i)) !== -1) {
+            var r = new Range();
+            r.setStart(node, i);
+            r.setEnd(node, i + q.length);
+            ranges.push(r);
+            i += q.length;
+          }
+        }
+      });
+      var h = new Highlight();
+      ranges.forEach(function (r) { h.add(r); });
+      if (ranges.length) CSS.highlights.set("search-hits", h);
+    } catch (e) { /* highlight is progressive enhancement */ }
+  }
+
+  function runSearch() {
+    var q = input.value.trim().toLowerCase();
+    clearHighlights();
+    clearBtn.style.display = q ? "block" : "none";
+    if (q.length < 2) {
+      sections.forEach(function (s) { s.style.display = ""; });
+      parts.forEach(function (p) { p.style.display = ""; });
+      if (hero) hero.style.display = "";
+      tocLinks.forEach(function (a) { a.classList.remove("dim"); });
+      meta.textContent = "";
+      return;
+    }
+    var hits = 0;
+    sections.forEach(function (sec) {
+      var hit = sec.textContent.toLowerCase().indexOf(q) !== -1;
+      sec.style.display = hit ? "" : "none";
+      var link = byId[sec.id];
+      if (link) link.classList.toggle("dim", !hit);
+      if (hit) hits++;
+    });
+    if (hero) hero.style.display = "none";
+    parts.forEach(function (p) { p.style.display = "none"; });
+    meta.textContent = hits ? hits + " section" + (hits === 1 ? "" : "s") + " match" : "No matches. Try another word.";
+    safeHighlight(q);
+  }
+  input.addEventListener("input", runSearch);
+  input.addEventListener("keydown", function (e) { if (e.key === "Escape") { input.value = ""; runSearch(); } });
+  clearBtn.addEventListener("click", function () { input.value = ""; runSearch(); input.focus(); });
+
+  // image click = open full size
+  document.querySelectorAll("figure img").forEach(function (img) {
+    img.style.cursor = "zoom-in";
+    img.addEventListener("click", function () { window.open(img.src, "_blank"); });
+  });
+})();
+</script>
+</body>
+</html>

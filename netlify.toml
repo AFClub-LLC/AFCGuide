@@ -1,0 +1,9 @@
+# Static training guide. No build step: the folder IS the site.
+[build]
+  publish = "."
+
+# Internal training material: keep it out of search engines.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
