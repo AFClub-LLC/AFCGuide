@@ -11,7 +11,7 @@ Nothing to build, no server, no dependencies. Just open `index.html`.
 ```
 training-site/        (this folder IS the site)
   index.html          # the whole guide: sticky TOC, search, print styles
-  images/             # real screenshots of the running app (webp, ~3.5MB total)
+  images/             # real screenshots of the running app (webp, ~5MB total)
   netlify.toml        # publish config (publish = ".", noindex headers)
 ```
 

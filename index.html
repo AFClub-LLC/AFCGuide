@@ -216,6 +216,29 @@
     font-size: 13.5px; background: var(--surface-2); border: 1px solid var(--line);
     border-radius: 10px; padding: 10px 14px; display: inline-block; margin: 4px 8px 4px 0;
   }
+  /* ---------- flow diagrams ---------- */
+  .flow {
+    display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px;
+    margin: 18px 0; max-width: 900px;
+  }
+  .flow .node {
+    flex: 1 1 130px; min-width: 120px; max-width: 220px;
+    border: 1px solid var(--line); background: var(--surface);
+    border-radius: 12px; padding: 10px 12px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .flow .node .t { font-weight: 600; font-size: 13.5px; color: var(--cream); line-height: 1.3; }
+  .flow .node .d { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
+  .flow .node.gold { border-color: var(--gold-deep); background: var(--gold-soft); }
+  .flow .node.gold .t { color: var(--gold); }
+  .flow .arrow {
+    flex: 0 0 auto; align-self: center; color: var(--gold);
+    font-size: 16px; padding: 0 2px; user-select: none;
+  }
+  .flow.split { flex-direction: column; max-width: 760px; }
+  .flow.split .branch { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
+  @media print { .flow .node { page-break-inside: avoid; } }
+
   .backtop { text-align: center; margin-top: 60px; }
   mark, ::highlight(search-hits) { background: var(--gold); color: #141414; }
 
@@ -263,9 +286,14 @@
     <a href="#p1-login">Logging in &amp; password reset</a>
     <a href="#p1-booking">Booking a session</a>
     <a href="#p1-tokens">AFC Tokens wallet</a>
+    <a href="#p1-foundations">Foundations enrollment</a>
     <a href="#p1-elite">The Elite journey</a>
+    <a href="#p1-packs">Elite session packs</a>
+    <a href="#p1-groups">Elite closed groups</a>
     <a href="#p1-performance">Performance classes</a>
     <a href="#p1-rewards">Rewards &amp; Refer a Family</a>
+    <a href="#p1-reports">Progress report cards</a>
+    <a href="#p1-feedback">Feedback (Kaizen)</a>
     <a href="#p1-recurring">Recurring weekly slots</a>
     <a href="#p1-account">Athletes, waiver &amp; account</a>
     <div class="part">Part 2 &middot; Admin side</div>
@@ -275,13 +303,15 @@
     <a href="#p2-coaches">Coaches</a>
     <a href="#p2-availability">Availability</a>
     <a href="#p2-services">Services &amp; Pricing</a>
+    <a href="#p2-discounts">Discount codes</a>
     <a href="#p2-clients">Clients &amp; Leads</a>
     <a href="#p2-payments">Payments &amp; refunds</a>
     <a href="#p2-coachpay">Coach Pay</a>
-    <a href="#p2-tokens-admin">AFC Tokens (admin)</a>
+    <a href="#p2-tokens-admin">AFC Tokens &amp; rewards (admin)</a>
+    <a href="#p2-feedback">Feedback board (admin)</a>
     <a href="#p2-emails">Email Log &amp; templates</a>
     <a href="#p2-content">Site Content</a>
-    <a href="#p2-roster">Class Roster</a>
+    <a href="#p2-roster">Foundations Roster</a>
     <a href="#p2-settings">Settings &amp; permissions</a>
     <div class="part">Part 3 &middot; Behind the scenes</div>
     <a href="#p3-emails">Which emails go out, and when</a>
@@ -300,6 +330,7 @@
   <span class="eyebrow">AFC &middot; Internal training</span>
   <h2 class="title">Know the platform like you built it.</h2>
   <p>This guide walks through every screen a parent, a coach, or an admin will ever touch. After reading it, anyone on the team should be able to answer any question a parent or coach asks. Use the search box on the left, or print the whole thing.</p>
+  <p style="margin-top:10px; font-size:13px; color:var(--gold);">Updated July 9, 2026: Foundations weekly enrollment, Elite session packs &amp; closed groups, the Assessment Pathway video, discount codes, the new rewards ladder, progress report cards, the Kaizen feedback board, and the redesigned account page.</p>
 </div>
 
 <!-- ============================================================ START -->
@@ -311,10 +342,16 @@
     <li><b>The admin Control Center</b> at <code>/admin</code>: dashboards, bookings, clients, payments, coach pay, emails, and site copy. What each person sees depends on their permissions.</li>
     <li><b>The coach Session Check-In</b> at <code>/admin/check-in</code>: a phone-first screen where a coach taps who showed up after a session. That tap drives coach pay, loyalty rewards, and referral payouts.</li>
   </ul>
-  <figure>
-    <img width="1600" height="1075" src="images/home.webp" alt="AFC public homepage" loading="lazy" />
-    <figcaption>The public homepage. Families start here: Find your athlete's path, or Book a session.</figcaption>
-  </figure>
+  <div class="shots-2">
+    <figure>
+      <img width="1600" height="1075" src="images/home.webp" alt="AFC public homepage" loading="lazy" />
+      <figcaption>The public homepage. Families start here: Find your athlete's path, or Book a session.</figcaption>
+    </figure>
+    <figure>
+      <img width="1600" height="1075" src="images/home-footer.webp" alt="Site footer contacts" loading="lazy" />
+      <figcaption>The footer splits contact by program: Andre for Performance &amp; Elite, Mike for Foundations, each with their own socials.</figcaption>
+    </figure>
+  </div>
   <div class="callout">
     <span class="tag">Demo logins</span>
     <p>Practice with these accounts on the demo site:</p>
@@ -393,7 +430,7 @@
   <p class="lede">The Book a session flow is five steps: <b>Service &rarr; Time &rarr; Coach &rarr; Details &rarr; Review</b>. A progress bar on top lets parents jump back to any step they already finished.</p>
 
   <ol class="steps">
-    <li><b>Service</b>: pick the program. Cards show price, length, and a "What's included" panel. Elite formats carry an "Elite &middot; by acceptance" badge: they can only be booked for an athlete who has been accepted into Elite.</li>
+    <li><b>Service</b>: pick the program. Cards show price, length, and a "What's included" panel. Elite formats carry an "Elite &middot; by acceptance" badge: they can only be booked for an athlete who has been accepted into Elite. Picking a <b>Foundations</b> block here hands off to the dedicated <a href="#p1-foundations">Foundations enrollment wizard</a> automatically.</li>
     <li><b>Time</b>: pick a day on the calendar, then a time. Only days and times with real coach availability show up. Parents can book up to 6 months ahead.</li>
     <li><b>Coach</b>: only coaches who are actually free at that exact time appear. If just one coach is available, this step is skipped automatically.</li>
     <li><b>Details</b>: who is training (signed-in parents tap a saved athlete or "Someone else"), athlete age, parent contact info, optional notes, and the required waiver. New parents see the create-account offer here, with a guest option.</li>
@@ -408,12 +445,13 @@
     <figure><img width="1600" height="1075" src="images/book-details-signedin.webp" alt="Details step signed in" loading="lazy" /><figcaption>Signed-in parents tap a saved athlete instead of retyping.</figcaption></figure>
     <figure><img width="1600" height="1075" src="images/book-5-waiver.webp" alt="Waiver modal" loading="lazy" /><figcaption>The waiver: parents must scroll to the end before I agree unlocks.</figcaption></figure>
     <figure><img width="1600" height="1075" src="images/book-6-review.webp" alt="Review step" loading="lazy" /><figcaption>Step 5: review everything, then continue to payment.</figcaption></figure>
-    <figure><img width="1600" height="1075" src="images/book-7-checkout.webp" alt="Checkout" loading="lazy" /><figcaption>Checkout: order summary plus payment. Card checkout is demo mode for now.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-7-checkout.webp" alt="Checkout" loading="lazy" /><figcaption>Checkout for an Elite session: pay with tokens, use a pack session, or pay by card, with a discount-code field below. Card checkout is demo mode for now.</figcaption></figure>
   </div>
 
   <h4>Paying, and what happens after</h4>
   <ul class="plain">
-    <li>Checkout offers <b>AFC Tokens</b> (if the family's balance covers it), or card. Families with prepaid session credits from the old pack system can use those too.</li>
+    <li>Checkout offers every payment path the family has: <b>AFC Tokens</b> (whenever the balance covers it), an <b>Elite pack session</b> (for accepted Elite athletes with credits left, see <a href="#p1-packs">Elite session packs</a>), a <b>reward voucher</b> (a free session or camp discount earned from the <a href="#p1-rewards">rewards ladder</a>), a typed <b>discount code</b> (see <a href="#p2-discounts">Discount codes</a>), or card.</li>
+    <li>One discount per booking: a code, a voucher, or a referral discount, never stacked.</li>
     <li>Paid bookings become <b>CONFIRMED</b> right away and the family gets a confirmation email plus receipt. An unpaid booking sits as a <b>PENDING</b> request until staff confirm or collect.</li>
     <li>The confirmation page (and email) includes an add-to-calendar link for Apple and Google Calendar.</li>
   </ul>
@@ -449,7 +487,7 @@
     <tr><th>Expiry</th><td>Never. That is a selling point over the old session packs.</td></tr>
     <tr><th>Cancelling</th><td>A parent can cancel any upcoming session from their account until its start time. If it was paid with tokens, the tokens go straight back to the wallet automatically, with a refund line in their history.</td></tr>
     <tr><th>The 24-hour policy</th><td>Terms and the confirmation email say: give at least 24 hours notice to cancel or reschedule. A late cancel or no-show may forfeit the session or its tokens.</td></tr>
-    <tr><th>Elite rates</th><td>For accepted Elite athletes, session prices in tokens follow the family's unlocked rate tier instead of the sticker price. See <a href="#p1-elite">the Elite journey</a>.</td></tr>
+    <tr><th>Elite prices</th><td>Paying an Elite session with tokens costs the <b>drop-in rate</b> in tokens. The discounted per-session rates now live in <a href="#p1-packs">Elite session packs</a>, bought on this same wallet page, not in a wallet-load tier.</td></tr>
   </table>
 
   <div class="callout warn">
@@ -458,50 +496,216 @@
   </div>
 
   <div class="faq">
-    <div class="qa"><p class="q">Do bigger loads earn bonus tokens?</p><p class="a"><b>No, never.</b> The old load-bonus ladder is gone. Bigger loads instead unlock cheaper Elite per-session rates for Elite families, and that is the only reward for loading more.</p></div>
+    <div class="qa"><p class="q">Do bigger loads earn bonus tokens?</p><p class="a"><b>No, never.</b> The old load-bonus ladder is gone, and so is the old "load more to unlock a cheaper Elite tier" rule. A token is always worth exactly a dollar; Elite families who want a cheaper per-session rate buy a <a href="#p1-packs">session pack</a> instead.</p></div>
     <div class="qa"><p class="q">Can tokens be refunded to a card?</p><p class="a">Not from the site. Cancellations refund to the wallet. Anything beyond that (cash-out requests) is a manual owner decision outside the platform.</p></div>
     <div class="qa"><p class="q">Can a family go negative?</p><p class="a">No. If the balance does not cover a price, the token option simply does not appear, and the page suggests loading or paying by card.</p></div>
     <div class="qa"><p class="q">Where do parents see their history?</p><p class="a">The wallet page lists every load, spend, refund, and reward line with dates and notes.</p></div>
   </div>
 </section>
 
+<section class="doc" id="p1-foundations">
+  <h3>Foundations enrollment (ages 2.5 to 12) <a class="hash" href="#p1-foundations">#</a></h3>
+  <p class="lede">Foundations is Coach Mikey's weekly program, and it books differently from everything else: a family enrolls in a <b>block of weekly classes</b>, not a single session. The athlete's age picks the class time automatically, the whole block fills itself in, and one payment covers it all.</p>
+
+  <div class="flow">
+    <div class="node"><span class="t">Enter the athlete's age</span><span class="d">2.5 to 12</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">Age picks the time</span><span class="d">each age band has a locked class time</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">Block auto-fills</span><span class="d">4 or 9 weekly dates, same time</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">One payment</span><span class="d">tokens, discount code, or card</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node gold"><span class="t">Same field, same time, every week</span><span class="d">and on the admin Roster</span></div>
+  </div>
+
+  <h4>The weekly grid</h4>
+  <p>Every class is <b>$20 per week</b>, so the block price is just the length: 4-week blocks are <b>$80</b>, 9-week blocks are <b>$180</b>. Each day has age bands, and each band has its own locked time:</p>
+  <table class="facts">
+    <tr><th>Day &middot; sport</th><td><b>Block</b></td><td><b>Location</b></td><td><b>Age &rarr; time</b></td></tr>
+    <tr><th>Monday &middot; Basketball</th><td>4-week &middot; $80</td><td>Lake Forest Sports Park</td><td>3-4 &rarr; 4:00 &middot; 5-6 &rarr; 4:50 &middot; 7-12 &rarr; 5:40</td></tr>
+    <tr><th>Tuesday &middot; Multi-Sport</th><td>9-week &middot; $180</td><td>Lake Forest / Regency Park</td><td>2.5-3 &rarr; 4:00 &middot; 4-5 &rarr; 4:50 &middot; 6-8 &rarr; 5:40 &middot; 9-12 &rarr; 6:30</td></tr>
+    <tr><th>Wednesday &middot; Soccer</th><td>4-week &middot; $80</td><td>Lake Forest Sports Park</td><td>3-4 &rarr; 4:00 &middot; 5-6 &rarr; 4:50 &middot; 7-12 &rarr; 5:40</td></tr>
+    <tr><th>Friday &middot; Soccer</th><td>4-week &middot; $80</td><td>Curtis Park, Mission Viejo</td><td>3-4 &rarr; 4:00 &middot; 5-6 &rarr; 4:50 &middot; 7-12 &rarr; 5:40</td></tr>
+    <tr><th>Saturday &middot; Multi-Sport</th><td>9-week &middot; $180</td><td>Lake Forest / Regency Park</td><td>2.5-3 &rarr; 9:00 &middot; 4-5 &rarr; 9:50 &middot; 6-8 &rarr; 10:40 &middot; 9-12 &rarr; 11:30</td></tr>
+  </table>
+  <p>The grid itself (days, sports, bands, times) is Mikey's to change: staff edit it under Site Content / Settings, and this table is just today's seeded structure.</p>
+
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/foundations-top.webp" alt="Foundations page" loading="lazy" /><figcaption>The Foundations page, now a top-level item in the site nav.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/foundations-classes.webp" alt="Day chooser" loading="lazy" /><figcaption>"Which day fits you?": each card is a day and sport with its age bands and times.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/foundations-day-times.webp" alt="Day detail page" loading="lazy" /><figcaption>Each day has its own page; every age row links straight into the wizard with that class preselected.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/foundations-mikey.webp" alt="Coach Mikey video" loading="lazy" /><figcaption>Coach Mikey's intro video plus his direct contact: (949) 309-6076, mikey@afsoccer.club.</figcaption></figure>
+  </div>
+
+  <h4>The enrollment wizard, step by step</h4>
+  <p>The wizard lives at <code>/book/foundations</code>: <b>Athlete &rarr; Class &rarr; Schedule &rarr; Review</b>. Picking a Foundations block anywhere else (including the normal booking wizard) lands here automatically.</p>
+  <ol class="steps">
+    <li><b>Athlete</b>: signed-in parents tap a saved athlete (age comes from the birth date); everyone else types a name and age. Outside 2.5 to 12, the wizard gently points the family to Performance instead.</li>
+    <li><b>Class</b>: only classes with a slot for that age show up, each with its length, price, locked time, and start date.</li>
+    <li><b>Schedule</b>: the whole block is already filled in, week by week, with live seat counts. Nothing to pick unless they want to change a week.</li>
+    <li><b>Review</b>: contact details, the create-account offer (or guest), and the liability waiver. "Continue to payment" creates the enrollment and opens checkout.</li>
+  </ol>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/fnd-wizard-athlete.webp" alt="Wizard athlete step" loading="lazy" /><figcaption>Step 1: who is training, and how old.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/fnd-wizard-class.webp" alt="Wizard class step" loading="lazy" /><figcaption>Step 2: the classes that fit that age, with price and start date.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/fnd-wizard-schedule.webp" alt="Wizard schedule step" loading="lazy" /><figcaption>Step 3: the block, auto-filled. Every week shows its date and time.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/fnd-wizard-swap.webp" alt="Same-week swap picker" loading="lazy" /><figcaption>"Change" on any week offers same-week, same-time alternatives: a different day or sport, never a different price.</figcaption></figure>
+  </div>
+
+  <div class="callout">
+    <span class="tag">The same-week swap rule</span>
+    <p>Can't make one week? That single week can switch to <b>another class in the same calendar week at the same clock time</b> (for example Wednesday Soccer &rarr; Friday Soccer, both 5:40). The age group and block price never change, and full classes are shown but not selectable. The server re-checks every swap, so nobody can sneak into a different time.</p>
+  </div>
+
+  <h4>Paying for a block</h4>
+  <ul class="plain">
+    <li>One checkout pays the <b>whole block</b>, and every week confirms at once.</li>
+    <li><b>AFC Tokens</b> pay 1:1 whenever the balance covers the block (signed-in families only, since guests have no wallet).</li>
+    <li>A <b>discount code</b> ("Have a discount code?") or a referral discount can come off first; one discount per block, never stacked.</li>
+    <li><b>Card</b> works too (demo mode for now, like everywhere else).</li>
+  </ul>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/fnd-checkout-code.webp" alt="Foundations checkout with code" loading="lazy" /><figcaption>Block checkout: all four weeks listed, one price, with a discount code applied.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/fnd-confirmation.webp" alt="Foundations confirmation" loading="lazy" /><figcaption>The confirmation page lists every class date in the block.</figcaption></figure>
+  </div>
+
+  <h4>Accounts and emails</h4>
+  <figure><img width="1600" height="1075" src="images/fnd-wizard-review.webp" alt="Review step with account creation" loading="lazy" /><figcaption>The Review step: contact details, the create-account panel with password, and the waiver.</figcaption></figure>
+  <ul class="plain">
+    <li>The Review step offers <b>inline account creation</b> (one password, optionally saving the athlete profile). Guests can still enroll and claim the account later from the confirmation page; claiming moves the <b>entire block</b>, not just one session.</li>
+    <li>Foundations emails are signed by <b>Mike Monary</b> with his phone and email, not Andre: the confirmation, the receipt, and the welcome email all carry the Foundations contact automatically.</li>
+    <li>A family that creates the account while enrolling gets <b>one combined welcome email</b> (welcome + confirm-your-email button + block details + receipt) instead of three separate ones.</li>
+  </ul>
+
+  <div class="faq">
+    <div class="qa"><p class="q">A parent asks when the next block starts.</p><p class="a">Today the wizard starts every block at the <b>next upcoming class day</b>: enroll on a Thursday for a Wednesday class and week 1 is the coming Wednesday. Fixed term start dates (real cohort calendars) are waiting on Mike; until then, do not promise a specific "term".</p></div>
+    <div class="qa"><p class="q">Their athlete is 11 or 12: which time?</p><p class="a">They join the oldest band on that day (7-12 or 9-12). If Mike adds a dedicated older band later, the grid update changes this automatically.</p></div>
+    <div class="qa"><p class="q">Can a family change a week after paying?</p><p class="a">The self-serve swap lives in the wizard, before payment. After payment, treat it like any other change: find that week's booking in admin and reschedule it. See <a href="#p2-bookings">Bookings</a>.</p></div>
+    <div class="qa"><p class="q">A class shows full. Now what?</p><p class="a">Each class holds 10 per week. The wizard blocks full weeks and offers the same-week alternative if one exists. Otherwise: another day, or the next block.</p></div>
+    <div class="qa"><p class="q">Where do staff see who's enrolled?</p><p class="a">The <a href="#p2-roster">Foundations Roster</a>: grouped per class with ages, parent contact, allergies, and per-class CSV export.</p></div>
+  </div>
+</section>
+
 <section class="doc" id="p1-elite">
   <h3>The Elite journey <a class="hash" href="#p1-elite">#</a></h3>
-  <p class="lede">Elite is by acceptance, not by purchase. The road in is the <b>$199 Assessment Pathway</b>. The reward for commitment is a cheaper per-session rate, unlocked by wallet load size.</p>
+  <p class="lede">Elite is by acceptance, not by purchase. The road in is the <b>$199 Assessment Pathway</b>. The reward for commitment is a cheaper per-session rate, and that discount now lives in <a href="#p1-packs">session packs</a>, not in wallet-load tiers.</p>
+
+  <div class="flow">
+    <div class="node"><span class="t">Apply</span><span class="d">free form at /elite/apply</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">$199 Assessment Pathway</span><span class="d">a focused paid training block</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">Decision</span><span class="d">Accepted &middot; Waitlist &middot; Not Yet Fit</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node gold"><span class="t">Accepted</span><span class="d">$199 &rarr; 199 tokens, packs &amp; groups unlock</span></div>
+  </div>
 
   <h4>The journey, step by step</h4>
   <ol class="steps">
-    <li>Family applies on the Elite page and books the <b>$199 Assessment Pathway</b>.</li>
-    <li>The athlete is assessed. Their status moves through: Applied &rarr; Assessment Pathway booked &rarr; Assessment complete, decision pending.</li>
+    <li>Family applies at <b>/elite/apply</b> (every Elite button on the site points there). The form asks for the athlete, position, level, goals, days that work, and now a <b>format</b>: Private, 2-player, 3-player, or a 4-6 player group. Picking a group format opens a <b>"Who else is in your group?"</b> roster, so a whole crew can apply behind one $199 assessment.</li>
+    <li>The application lands in <a href="#p2-clients">New leads</a>, the business gets a notification email, and the family gets a branded auto-reply with next steps. Applying never grants entry by itself.</li>
+    <li>The athlete books and completes the <b>$199 Assessment Pathway</b>. Status on their profile moves Applied &rarr; Assessment booked &rarr; Assessment complete.</li>
     <li>Staff make the call on the athlete's profile: <b>Accepted</b>, <b>Waitlist</b>, or <b>Not Yet Fit</b> (routed to Performance instead, with pride intact).</li>
-    <li>On acceptance, the $199 they paid <b>converts to 199 tokens</b> in the family wallet, once per athlete ever. Their first sessions are effectively pre-paid.</li>
-    <li>Accepted athletes can now book Elite formats: Private, 2-Player, 3-Player, and 4-6 Player groups.</li>
+    <li>On acceptance, tick "Convert" and the $199 becomes <b>199 tokens</b> in the family wallet, once per athlete ever, and the family gets the <b>elite-accepted email</b> automatically.</li>
+    <li>Accepted athletes can book Elite formats, buy <a href="#p1-packs">session packs</a>, and start <a href="#p1-groups">closed groups</a>.</li>
   </ol>
 
-  <h4>The rate ladder (per session, per athlete)</h4>
-  <table class="facts">
-    <tr><th>Format</th><td><b>Drop-in</b></td><td><b>4-pack tier</b></td><td><b>8-pack tier</b></td><td><b>12-pack tier</b></td></tr>
-    <tr><th>Private (1-on-1)</th><td>$120</td><td>$105</td><td>$95</td><td>$85</td></tr>
-    <tr><th>2-Player Group</th><td>$180</td><td>$75</td><td>$70</td><td>$65</td></tr>
-    <tr><th>3-Player Group</th><td>$225</td><td>$60</td><td>$55</td><td>$50</td></tr>
-    <tr><th>4-6 Player Group</th><td>$240</td><td>$50</td><td>$45</td><td>$40</td></tr>
-  </table>
-  <p>A family's tier is set by their <b>single largest wallet load</b>: load $120 or more for drop-in rates, <b>$420+</b> unlocks the 4-pack tier, <b>$760+</b> the 8-pack tier, and <b>$1,020+</b> the 12-pack tier. Loading ahead is the commitment signal, and the discount lives in the rate, not in bonus tokens.</p>
-  <div class="callout">
-    <span class="tag">Where each number lives</span>
-    <p>The public Elite page shows only "from $X, as low as $Y" per format. The load thresholds ($120 / $420 / $760 / $1,020) are dashboard-only: families see their own tier and the next unlock on their wallet page. Do not quote thresholds on the landing page.</p>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/elite-top.webp" alt="Elite page top" loading="lazy" /><figcaption>The Elite page: selective by design, one call to action.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/elite-journey.webp" alt="Elite journey steps" loading="lazy" /><figcaption>The four-step Assessment Pathway on the Elite page.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/elite-apply.webp" alt="Elite apply form" loading="lazy" /><figcaption>The apply form: parent, athlete, level, goals, days, and the format selector.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/elite-apply-roster.webp" alt="Group roster on apply" loading="lazy" /><figcaption>Choosing a group format reveals the bring-your-own-group roster.</figcaption></figure>
   </div>
 
-  <div class="shots-2">
-    <figure><img width="1600" height="1075" src="images/elite-journey.webp" alt="Elite journey" loading="lazy" /><figcaption>The Elite page walks families through the Assessment Pathway.</figcaption></figure>
-    <figure><img width="1600" height="1075" src="images/elite-rates.webp" alt="Elite rates" loading="lazy" /><figcaption>Public rates table: "Commitment lowers the rate." From and as-low-as only.</figcaption></figure>
-  </div>
+  <h4>Andre's walkthrough video</h4>
+  <p>The Elite page now embeds <b>Andre's Assessment Pathway walkthrough</b>, right under the journey steps. It is click-to-play with closed captions <b>on by default</b>, and the gear menu holds caption size, color, background, and playback speed. If a parent asks what the assessment actually involves, this video is the answer.</p>
+  <figure><img width="1600" height="1075" src="images/elite-video.webp" alt="Assessment Pathway video" loading="lazy" /><figcaption>The custom player: captions on by default, with the settings menu open.</figcaption></figure>
 
   <div class="faq">
     <div class="qa"><p class="q">A parent asks: is the $199 assessment refundable?</p><p class="a">It converts to 199 tokens if the athlete is accepted, so accepted families lose nothing. For waitlist or not-yet-fit outcomes there is no automatic conversion or refund: that is an owner decision case by case.</p></div>
-    <div class="qa"><p class="q">Who pays in a group session booked once?</p><p class="a">One parent books and pays the whole group price to lock the slot (for example $180 for a 2-Player drop-in), and the families settle up between themselves. Any package tier brings the per-athlete rate down instead.</p></div>
-    <div class="qa"><p class="q">Does the tier ever expire or drop?</p><p class="a">No. It is based on the biggest single load the family has ever made.</p></div>
-    <div class="qa"><p class="q">Does acceptance send the family an email automatically?</p><p class="a"><b>Not yet.</b> A beautiful elite-accepted email exists but is not wired to the status change. Call or email the family personally when you accept an athlete.</p></div>
+    <div class="qa"><p class="q">Does acceptance email the family automatically?</p><p class="a"><b>Yes, when you convert.</b> Saving Accepted with the "Convert the $199 to 199 tokens" box ticked sends the elite-accepted email. Saving Accepted <b>without</b> converting sends nothing, so in that case call or email the family yourself.</p></div>
+    <div class="qa"><p class="q">Where do the public prices live?</p><p class="a">The Elite page's rates section shows per-athlete "from / as low as" numbers per format. The exact pack math lives on the family's wallet page and in <a href="#p2-tokens-admin">the admin rate ladder</a>.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-packs">
+  <h3>Elite session packs <a class="hash" href="#p1-packs">#</a></h3>
+  <p class="lede">Packs replaced the old "biggest wallet load sets your tier" rule. A pack is <b>prepaid sessions of one format at a locked rate</b>: buy 4, 8, or 12, and each Elite booking of that format uses one until the pack runs out. No expiry, ever.</p>
+
+  <div class="flow">
+    <div class="node"><span class="t">Buy a pack</span><span class="d">Account &rarr; AFC Tokens &rarr; Elite session packs</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">Book Elite sessions</span><span class="d">"Use 1 pack session" at checkout</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">Pack counts down</span><span class="d">4 of 4 &rarr; 3 of 4 &rarr; &hellip;</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node gold"><span class="t">Pack empty</span><span class="d">next session books at drop-in, or buy another pack</span></div>
+  </div>
+
+  <h4>The rate ladder (per athlete, per session)</h4>
+  <table class="facts">
+    <tr><th>Format</th><td><b>Drop-in</b></td><td><b>4-pack</b></td><td><b>8-pack</b></td><td><b>12-pack</b></td></tr>
+    <tr><th>Private (1-on-1)</th><td>$120</td><td>$105 ($420 total)</td><td>$95 ($760)</td><td>$85 ($1,020)</td></tr>
+    <tr><th>2-Player Group</th><td>$90</td><td>$75 ($300)</td><td>$70 ($560)</td><td>$65 ($780)</td></tr>
+    <tr><th>3-Player Group</th><td>$75</td><td>$60 ($240)</td><td>$55 ($440)</td><td>$50 ($600)</td></tr>
+    <tr><th>4-6 Player Group</th><td>$60</td><td>$50 ($200)</td><td>$45 ($360)</td><td>$40 ($480)</td></tr>
+  </table>
+  <p>Every number is <b>per athlete</b> now (the old $180 "whole 2-player slot" style pricing is gone), and every number is editable in <a href="#p2-tokens-admin">the admin Elite rates panel</a>. A pack locks its rate at purchase: repricing the ladder later never changes what a family already bought.</p>
+
+  <h4>How families use them</h4>
+  <ul class="plain">
+    <li><b>Where to buy</b>: Account &rarr; AFC Tokens. The "Elite session packs" section appears for any family on the Elite track and unlocks for purchase once an athlete is <b>Accepted</b>. Pick the format, pick the pack size, pay by card (demo).</li>
+    <li><b>Spending</b>: at checkout for a matching Elite format, the pack appears as "You have N sessions left" with a <b>Use 1 pack session</b> button. It always drains the emptiest matching pack first, and a pack only ever pays for the format it was bought for.</li>
+    <li><b>Cancelling</b>: cancel with 24+ hours notice and the session <b>goes back into the pack</b>. A late cancel forfeits it (staff cancellations always refund, any time).</li>
+    <li><b>Running out</b>: nothing breaks. The next booking simply offers drop-in tokens or card, and the wallet page sells the next pack.</li>
+  </ul>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/wallet-packs-buy.webp" alt="Pack purchase" loading="lazy" /><figcaption>Buying: format chips, pack cards with the per-session rate, demo card form.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/wallet-packs-active.webp" alt="Active pack" loading="lazy" /><figcaption>An active pack: sessions left, locked rate, progress bar.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/elite-rates.webp" alt="Public Elite rates" loading="lazy" /><figcaption>The public rates section: per-athlete "from / as low as" only.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-7-checkout.webp" alt="Checkout with pack" loading="lazy" /><figcaption>Checkout with a pack: tokens, "Use 1 pack session", or card.</figcaption></figure>
+  </div>
+
+  <div class="faq">
+    <div class="qa"><p class="q">Do packs expire?</p><p class="a"><b>No.</b> Sessions sit in the pack until used. That, plus the returned-on-cancel rule, is the honest pitch.</p></div>
+    <div class="qa"><p class="q">Can a family use a Private pack for a group session?</p><p class="a">No. A pack matches its own format only. Different format, different pack (or tokens/card at the drop-in rate).</p></div>
+    <div class="qa"><p class="q">Can staff see or adjust a family's packs?</p><p class="a">See, yes: the admin New booking form shows a live "packs" chip for the family, and staff can spend a pack session on their behalf when booking. There is <b>no admin button to grant or top up pack sessions</b>: fixing a pack mistake means a token adjustment or a comped booking instead.</p></div>
+    <div class="qa"><p class="q">Why do the Private totals look familiar?</p><p class="a">$420 / $760 / $1,020 were the old wallet-load thresholds. Same dollars, completely different mechanic: they now buy a concrete bundle of sessions instead of unlocking a tier.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-groups">
+  <h3>Elite closed groups <a class="hash" href="#p1-groups">#</a></h3>
+  <p class="lede">A closed group is a <b>weekly slot reserved for a fixed set of 3 to 6 families</b>: same coach, same time, nobody else can book into it. A parent with an accepted Elite athlete creates it and invites the others by email.</p>
+
+  <div class="flow">
+    <div class="node"><span class="t">Anchor parent creates</span><span class="d">format, coach, weekly time, size 3-6</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">Invites go out</span><span class="d">each family gets an email link</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">Families confirm</span><span class="d">sign in, pick their athlete, in</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node gold"><span class="t">Slot held weekly</span><span class="d">4 weeks ahead, each family pays their own seat</span></div>
+  </div>
+
+  <h4>How it works</h4>
+  <ol class="steps">
+    <li>The parent opens <b>Account &rarr; Group sessions</b> and hits <b>Start a group</b> (the button appears once an athlete is Accepted).</li>
+    <li>They pick their athlete, the group format, a coach who offers it, a weekly day and time from real availability, the group size (3 to 6, capped by the format), and the invitee emails.</li>
+    <li>Each invited family gets an email link. They sign in <b>with the invited email</b>, pick which of their athletes joins, and confirm (or decline, which frees the seat). <b>Confirming is their door into Elite: invited families do not need their own $199 assessment.</b></li>
+    <li>Every member's athlete is enrolled into the next <b>4 weeks</b> of the slot, held as reserved bookings. The time disappears from the public calendar entirely.</li>
+    <li>Each family then <b>pays for their own athlete's seat per session</b>: pack credit, tokens, or card, at that format's per-athlete rate. Nobody fronts the whole group's bill.</li>
+  </ol>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/groups-new.webp" alt="Create group form" loading="lazy" /><figcaption>Creating a group: athlete, format, coach, weekly time, size, invites.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/groups-list.webp" alt="Groups list" loading="lazy" /><figcaption>The group card: who's confirmed, who's still invited, and the weekly slot.</figcaption></figure>
+  </div>
+  <div class="faq">
+    <div class="qa"><p class="q">A parent says their invite link doesn't work.</p><p class="a">The link only accepts a login with the <b>exact email that was invited</b>. Signed in with a different address, it will refuse: have them sign in (or sign up) with the invited email, or ask the group owner to re-invite the right one.</p></div>
+    <div class="qa"><p class="q">Can staff create or dissolve a group?</p><p class="a">Not today. Groups are parent-created; admin sees their bookings on the calendar (tagged to the group) and the membership on the family's profile, read-only. To end one, ask the owner, or cancel the held bookings from admin.</p></div>
+    <div class="qa"><p class="q">How big can a group be?</p><p class="a">3 to 6 families, but never more than the format's capacity. With today's catalog the biggest group-ready format is the 3-player small group; a true 4-6 group needs that service added to the catalog first.</p></div>
+    <div class="qa"><p class="q">What if a member never confirms?</p><p class="a">Their seat stays "invited" and their athlete is not enrolled. The rest of the group runs normally; the owner can re-send or replace them.</p></div>
   </div>
 </section>
 
@@ -536,40 +740,99 @@
 
 <section class="doc" id="p1-rewards">
   <h3>Rewards &amp; Refer a Family <a class="hash" href="#p1-rewards">#</a></h3>
-  <p class="lede">Loyalty is automatic: sessions count themselves, tokens land by themselves, and referring a family pays both sides. Parents see it all at Account &rarr; Rewards.</p>
+  <p class="lede">Loyalty is automatic: sessions count themselves, rewards land by themselves, and referring a family pays both sides. Parents see it all at Account &rarr; Rewards. The ladder was retuned in July: rewards are no longer just tokens, they include a <b>free session</b> and a <b>camp discount</b> that really redeem at checkout.</p>
 
-  <h4>Loyalty tokens (per athlete)</h4>
+  <h4>The session milestone ladder (per athlete)</h4>
   <table class="facts">
-    <tr><th>8 completed sessions</th><td>+25 tokens, automatically</td></tr>
-    <tr><th>18 completed sessions</th><td>+50 tokens</td></tr>
-    <tr><th>40 completed sessions</th><td>+100 tokens</td></tr>
+    <tr><th>15 completed sessions</th><td><b>25-token credit drop</b>: 25 tokens land in the wallet automatically</td></tr>
+    <tr><th>30 completed sessions</th><td><b>Bonus Momentum free session</b>: a voucher that confirms any one session at no charge</td></tr>
+    <tr><th>40 completed sessions</th><td><b>20% off a camp</b>: a voucher applied at camp checkout</td></tr>
   </table>
-  <p>Each milestone pays once per athlete. "Completed" means the session actually happened: the coach checked the athlete in, or staff marked the booking Completed. The My Progress bar shows exactly how far each athlete is, for example "1 of 8 sessions: 7 to go until 25 tokens".</p>
+  <p>Each milestone pays once per athlete. "Completed" means the session actually happened: the coach checked the athlete in, or staff marked the booking Completed. The My Progress bar shows exactly how far each athlete is, and every threshold, reward type, and label is editable in <a href="#p2-tokens-admin">the admin loyalty ladder</a>.</p>
 
-  <h4>Milestone perks (separate from tokens)</h4>
+  <div class="flow">
+    <div class="node"><span class="t">Sessions complete</span><span class="d">check-in counts them</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">Milestone crossed</span><span class="d">15 &middot; 30 &middot; 40</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node"><span class="t">Reward lands</span><span class="d">tokens to the wallet, or a voucher marked Ready</span></div>
+    <span class="arrow">&rarr;</span>
+    <div class="node gold"><span class="t">Voucher redeems at checkout</span><span class="d">free session confirms at $0; camp code takes 20% off</span></div>
+  </div>
+  <p>Vouchers are family-level and one per booking. If a voucher-paid booking is cancelled or refunded, the voucher <b>returns to Ready</b>: nothing is lost.</p>
+
+  <h4>Milestone perks (separate, hand-delivered)</h4>
   <ul class="plain">
     <li><b>AFC jersey</b> at 10 completed sessions.</li>
     <li><b>AFC training booklet</b> at 20 completed sessions.</li>
     <li><b>Online video session with Coach Sebi</b> at 500 tokens spent.</li>
     <li><b>AFC merch drop</b> at 1,000 tokens spent.</li>
   </ul>
-  <p>Perks are earned, not spent: they never touch the wallet balance. When one unlocks, hand it to the athlete at a session. The thresholds are placeholders until Andre finalizes them.</p>
+  <p>Perks are earned, not spent: they never touch the wallet. When one unlocks, hand it to the athlete at a session. Thresholds are placeholders until Andre finalizes them.</p>
 
-  <h4>Refer a Family</h4>
-  <ol class="steps">
-    <li>The parent opens Rewards and copies their personal invite link (it looks like <code>/signup?ref=CODE</code>).</li>
-    <li>The new family signs up through that link and books.</li>
-    <li>When the new family <b>completes their first paid session</b>, the referrer gets <b>100 tokens</b> and the new family gets <b>25 tokens</b>. Automatically, no forms.</li>
-  </ol>
-  <p>Staff can also record a referral by hand (for word-of-mouth cases) in <a href="#p2-tokens-admin">AFC Tokens (admin)</a>.</p>
+  <h4>Refer a Family (now program-aware)</h4>
+  <p>The parent copies their invite link (or code) from Rewards; the new family signs up through it. What each side gets depends on <b>which program the new family starts in</b>:</p>
+  <div class="flow split">
+    <div class="branch">
+      <div class="node"><span class="t">Friend's first booking is Foundations</span><span class="d">a weekly block</span></div>
+      <span class="arrow">&rarr;</span>
+      <div class="node gold"><span class="t">Friend: instant $ off that first block ($12 off 4-week, $15 off 9-week)</span><span class="d">right at checkout</span></div>
+      <span class="arrow">&rarr;</span>
+      <div class="node"><span class="t">Referrer: the same $ in tokens</span><span class="d">when the friend's first session completes</span></div>
+    </div>
+    <div class="branch">
+      <div class="node"><span class="t">Friend's first booking is Performance or Elite</span><span class="d">a session</span></div>
+      <span class="arrow">&rarr;</span>
+      <div class="node gold"><span class="t">Friend: 25 welcome tokens</span><span class="d">paid at first completed paid session</span></div>
+      <span class="arrow">&rarr;</span>
+      <div class="node"><span class="t">Referrer: 100 tokens</span><span class="d">same moment</span></div>
+    </div>
+  </div>
+  <p>All the amounts are editable in <a href="#p2-tokens-admin">the admin referral rewards panel</a>, and staff can still record a word-of-mouth referral by hand.</p>
   <div class="shots-2">
-    <figure><img width="1600" height="1075" src="images/parent-rewards.webp" alt="Rewards page" loading="lazy" /><figcaption>My Progress per athlete, with the 8 / 18 / 40 milestones marked.</figcaption></figure>
-    <figure><img width="1600" height="1075" src="images/parent-rewards-2.webp" alt="Perks and referral" loading="lazy" /><figcaption>Milestone perks and the Refer a Family link live further down the page.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/parent-rewards.webp" alt="Rewards page" loading="lazy" /><figcaption>My Progress per athlete, with the 15 / 30 / 40 milestones marked on each bar.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/parent-rewards-2.webp" alt="Redeemable rewards" loading="lazy" /><figcaption>Redeemable rewards: earned vouchers show Ready until they are used at checkout.</figcaption></figure>
   </div>
   <div class="faq">
-    <div class="qa"><p class="q">Why has the referral not paid out yet?</p><p class="a">It pays when the referred family's first <b>paid</b> session is <b>completed</b>, not when they sign up or book. Check the referral tracker in AFC Tokens: it shows pending versus paid.</p></div>
+    <div class="qa"><p class="q">Why has the referral not paid out yet?</p><p class="a">Token payouts fire when the referred family's first <b>paid</b> session (or block) is <b>completed</b>, not when they sign up. The Foundations friend-discount is the exception: it comes off instantly at their first checkout. The tracker in <a href="#p2-tokens-admin">AFC Tokens (admin)</a> shows pending versus paid.</p></div>
     <div class="qa"><p class="q">Do cancelled sessions count toward loyalty?</p><p class="a">No. Only completed sessions count. Pending and confirmed ones do not count until they happen.</p></div>
-    <div class="qa"><p class="q">Can both rewards stack in one wallet?</p><p class="a">Yes. Loyalty and referral tokens are normal tokens: same wallet, same spending power, never expire.</p></div>
+    <div class="qa"><p class="q">Can a voucher stack with a discount code?</p><p class="a">No. One discount per booking: a voucher, a code, or a referral discount, whichever the family picks.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-reports">
+  <h3>Progress report cards (Elite) <a class="hash" href="#p1-reports">#</a></h3>
+  <p class="lede">A written report card from the coach: skill ratings plus what's going well, what's being worked on, and one thing to practice at home. <b>Elite only</b>: the page and the dashboard tile appear once a family has an accepted Elite athlete.</p>
+  <h4>What's in a card</h4>
+  <ul class="plain">
+    <li><b>8 skills rated 1 to 5</b>: first touch &amp; control, passing &amp; vision, dribbling &amp; 1v1, finishing, defending, speed &amp; athleticism, game IQ &amp; decisions, attitude &amp; effort. Any skill can be left unrated.</li>
+    <li><b>Four short notes</b>: Wins, Working on, At-home focus, and a coach note. All optional, but a card needs at least one rating or note.</li>
+    <li>Cards are <b>on demand</b>, dated documents: write one after a milestone month, an assessment, or whenever there is something to say. There is no forced monthly cadence.</li>
+  </ul>
+  <p><b>Who writes them</b>: a coach or admin, on the athlete's profile under <a href="#p2-clients">Clients</a> ("New report card"). Saving is immediately live on the family's account under <b>Progress reports</b>. No email goes out: the report is an in-portal document, so mention it to the family at pickup or in your own message.</p>
+  <div class="shots-2">
+    <figure><img width="1600" height="1075" src="images/admin-report-card.webp" alt="Writing a report card" loading="lazy" /><figcaption>The coach side: dot ratings per skill and the four note fields.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/account-progress-reports.webp" alt="Parent report view" loading="lazy" /><figcaption>The parent side: a newest-first library per athlete.</figcaption></figure>
+  </div>
+  <div class="faq">
+    <div class="qa"><p class="q">Can a Foundations or Performance family get report cards?</p><p class="a">Not today. Both the writing form and the parent page require an accepted Elite athlete. Pitch it as an Elite membership benefit.</p></div>
+    <div class="qa"><p class="q">Can a coach write one for any athlete?</p><p class="a">Owners and all-scope staff can. A coach login can write for families they have actually coached, which keeps reports grounded in sessions that happened.</p></div>
+    <div class="qa"><p class="q">Wrote the wrong thing?</p><p class="a">Cards can be edited or deleted from the same place on the client profile. Edits are live to the parent immediately.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-feedback">
+  <h3>Feedback: the Kaizen loop <a class="hash" href="#p1-feedback">#</a></h3>
+  <p class="lede">One always-open channel for ideas and concerns, feeding one shared board the team reviews together. The parent side is <b>anonymous by construction</b>: the submission stores no name or account, ever.</p>
+  <ul class="plain">
+    <li><b>Parents</b>: the "How can we be better?" card on their account page opens a single text box. Submit, done. The confirmation promises anonymity, and the system delivers it: nothing identifying is stored.</li>
+    <li><b>Coaches and the team</b> add ideas straight on the admin board (attributed by default, with an anonymity toggle in board settings).</li>
+    <li>Everything lands in the same <a href="#p2-feedback">admin Feedback board</a>, where managers triage: New &rarr; Planned &rarr; Implemented (or Declined), with an optional decision note.</li>
+  </ul>
+  <figure><img width="1600" height="1075" src="images/account-feedback.webp" alt="Parent feedback form" loading="lazy" /><figcaption>The parent form: one box, anonymous, straight to the team.</figcaption></figure>
+  <div class="faq">
+    <div class="qa"><p class="q">A parent asks if their feedback is really anonymous.</p><p class="a">Yes, truthfully. The record stores only the text and "parent" as the source. Nobody, including the owner, can see who wrote it.</p></div>
+    <div class="qa"><p class="q">Does submitting trigger any email?</p><p class="a">No. The loop is deliberately quiet: the board is the single place to review it, ideally on a weekly rhythm.</p></div>
   </div>
 </section>
 
@@ -599,19 +862,23 @@
 
 <section class="doc" id="p1-account">
   <h3>Athletes, waiver &amp; account management <a class="hash" href="#p1-account">#</a></h3>
-  <p class="lede">The account page (<code>/account</code>) is the family home: athletes, upcoming and past sessions, wallet and rewards shortcuts, and any recurring slots.</p>
+  <p class="lede">The account page (<code>/account</code>) was redesigned in July into the family's home base: the wallet front and center, one tile per feature, and everything else two taps away.</p>
   <div class="shots-2">
-    <figure><img width="1600" height="1075" src="images/parent-account.webp" alt="Account home" loading="lazy" /><figcaption>The account home: sessions up top, wallet and rewards cards, athletes below.</figcaption></figure>
-    <figure><img width="1600" height="1075" src="images/parent-athlete-form.webp" alt="Athlete form" loading="lazy" /><figcaption>An athlete profile: the more it holds, the better prepared the coach.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/parent-account.webp" alt="Account home" loading="lazy" /><figcaption>The new account home: wallet card, feature tiles, feedback and game film cards.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/parent-account-2.webp" alt="Athletes and sessions" loading="lazy" /><figcaption>Further down: athletes, upcoming sessions, and the paginated history.</figcaption></figure>
   </div>
-  <h4>What a parent can do here</h4>
+  <h4>The new layout, top to bottom</h4>
   <ul class="plain">
-    <li><b>Athletes</b>: add or edit profiles. Name, relation to the account holder, date of birth, photo, sport, position, dominant side, skill level, current team, goals, allergies, medical notes, and an emergency contact. Coaches see what they need to run a safe session.</li>
-    <li><b>Archive</b> an athlete who stopped training (it hides them without deleting history).</li>
-    <li><b>Sessions</b>: see upcoming and past bookings with payment state, and <b>cancel</b> an upcoming one (allowed until its start time; token payments refund instantly).</li>
+    <li><b>The wallet card</b>: the AFC Tokens balance as a full-width gold card, one tap into the wallet (and the Elite pack shop).</li>
+    <li><b>Feature tiles</b>: <b>Group sessions</b> (shows once the family has groups, invites, or Elite standing), <b>Rewards &amp; referrals</b>, and <b>Progress reports</b> (Elite families only).</li>
+    <li><b>"How can we be better?"</b>: the anonymous <a href="#p1-feedback">Kaizen feedback</a> card.</li>
+    <li><b>Game Film</b>: the camcorder card, "Send us the tape." It links to the AFC Dropbox file-request for game footage once the URL is set in admin Settings; until then it shows a STANDBY "coming soon" state.</li>
+    <li><b>Athletes</b>: add or edit profiles. Name, relation, date of birth, photo, sport, position, dominant side, skill level, current team, goals, allergies, medical notes, and an emergency contact. Coaches see what they need to run a safe session. <b>Archive</b> hides a former athlete without deleting history.</li>
+    <li><b>Sessions</b>: upcoming up top with one-tap <b>cancel</b> (allowed until start time; token payments refund instantly). <b>Past &amp; cancelled</b> and <b>Receipts</b> are now paginated, 10 per page, newest first, each row opening a detail view.</li>
     <li><b>Waiver</b>: signed per booking during checkout. The modal forces a full read: the I agree button unlocks only after scrolling to the end. The signed date shows on the athlete's file in admin.</li>
     <li><b>Email banner</b>: unverified accounts see a resend-verification banner here.</li>
   </ul>
+  <figure><img width="1600" height="1075" src="images/parent-athlete-form.webp" alt="Athlete form" loading="lazy" /><figcaption>An athlete profile: the more it holds, the better prepared the coach.</figcaption></figure>
   <div class="faq">
     <div class="qa"><p class="q">Why does age matter so much on the profile?</p><p class="a">Date of birth drives Performance age bands. Without it we let Beginner bookings through, but Advanced placement and strict banding work best with a real birth date.</p></div>
     <div class="qa"><p class="q">Can parents change their email or phone?</p><p class="a">They edit contact details on their account. If something is stuck, staff can update the client record from admin.</p></div>
@@ -663,6 +930,7 @@
     <li>Optional <b>notes</b>, visible to the assigned coach on their check-in screen.</li>
     <li>Payment options: <b>Pay with family tokens</b> (auto-deducts), <b>Mark as paid</b> (cash or e-transfer), and <b>Send confirmation email</b> if the family has an email on file. Leave both payment boxes unticked to create it as a pending request.</li>
   </ol>
+  <p>For Elite families the form also shows a live <b>packs chip</b> ("Private (1-on-1): 3 left") next to their token balance, and staff can spend a pack session on the family's behalf when booking an Elite format.</p>
   <figure><img width="1600" height="1075" src="images/admin-new-booking.webp" alt="New booking modal" loading="lazy" /><figcaption>The manual booking form. Athlete first, then service, time, coach, notes, payment.</figcaption></figure>
 
   <h4>Recurring, reschedule, group</h4>
@@ -719,7 +987,7 @@
 
 <section class="doc" id="p2-coaches">
   <h3>Coaches <a class="hash" href="#p2-coaches">#</a></h3>
-  <p class="lede">The public coaching roster and each coach's login live here. Cards drag to reorder; the order is what the public site shows.</p>
+  <p class="lede">The public coaching roster and each coach's login live here. Cards drag to reorder; the order is what the public site shows, except that <b>Andre is always pinned first</b> on the homepage rail as the founder.</p>
   <div class="shots-2">
     <figure><img width="1600" height="1075" src="images/admin-coaches.webp" alt="Coaches roster" loading="lazy" /><figcaption>The roster. Active coaches appear on the public site; inactive ones (like Lucas today) stay internal.</figcaption></figure>
     <figure><img width="1600" height="1075" src="images/admin-coach-form.webp" alt="Coach form" loading="lazy" /><figcaption>Edit a coach: photo, title, bio, specialties, and which services they offer.</figcaption></figure>
@@ -764,7 +1032,30 @@
   </ul>
   <div class="faq">
     <div class="qa"><p class="q">Can I retire a service safely?</p><p class="a">Toggle it inactive. History stays intact, nothing new can book it. Deleting is not the way.</p></div>
-    <div class="qa"><p class="q">Where do Elite per-session token prices come from?</p><p class="a">Not from this page. Elite formats price from the family's rate tier at checkout: see <a href="#p1-elite">the Elite journey</a>. The sticker price here is the drop-in rate.</p></div>
+    <div class="qa"><p class="q">Where do Elite per-session prices come from?</p><p class="a">Not from this page. Elite formats price from the rate ladder in <a href="#p2-tokens-admin">AFC Tokens &amp; rewards</a>: drop-in when paying directly, or the pack rate when a pack session is used. The sticker price here is the drop-in rate.</p></div>
+    <div class="qa"><p class="q">And Foundations block prices?</p><p class="a">Foundations blocks price by length: $20 a class, so the 4 / 6 / 9-week services are $80 / $120 / $180. Keep those services in sync with the weekly grid.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-discounts">
+  <h3>Discount codes <a class="hash" href="#p2-discounts">#</a></h3>
+  <p class="lede">Typed-at-checkout codes, created on the Services &amp; Pricing page. The classic use: a family starting a Foundations block two weeks late gets a code for the missed weeks instead of a special price.</p>
+  <h4>Creating a code</h4>
+  <ol class="steps">
+    <li>Services &amp; Pricing &rarr; <b>Discount codes</b> &rarr; New code. Pick the code text (letters, numbers, dashes; it stores uppercase).</li>
+    <li>Choose <b>$ off</b> or <b>% off</b> and the amount.</li>
+    <li>Scope it: <b>any service</b>, a whole <b>kind</b> (like "Any Foundations"), or one specific service.</li>
+    <li>Optionally set a live window (from / until dates), a total-use cap, and a per-family cap (default: once per family). Add a note so the team knows why it exists.</li>
+  </ol>
+  <figure><img width="1600" height="1075" src="images/admin-discount-codes.webp" alt="Discount codes panel" loading="lazy" /><figcaption>The codes table with live status, plus the create form. A used code can be deactivated but never deleted, so history stays honest.</figcaption></figure>
+  <ul class="plain">
+    <li>Parents type the code under <b>"Have a discount code?"</b> on both checkouts: regular sessions and Foundations blocks. It reduces card and token prices alike.</li>
+    <li><b>One discount per booking</b>: a code never stacks with a reward voucher or the referral discount.</li>
+    <li>Guests can redeem codes too. Refunding a booking releases the code use.</li>
+  </ul>
+  <div class="faq">
+    <div class="qa"><p class="q">A parent says their code doesn't work.</p><p class="a">Check, in order: is it inside its from/until window, is it still active, has the total-use cap been hit, has this family already used it (per-family cap), and does its scope actually cover what they are buying.</p></div>
+    <div class="qa"><p class="q">Percentage or fixed?</p><p class="a">Fixed $ is the cleanest for late-start proration ($20 per missed Foundations week). Percent reads better for promotions.</p></div>
   </div>
 </section>
 
@@ -785,13 +1076,16 @@
   </table>
   <h4>Inside a profile</h4>
   <ul class="plain">
-    <li><b>Contact</b> details and their athletes, each with Elite status and Performance level controls.</li>
-    <li><b>Elite decisions</b>: set the athlete's stage (Applied, Assessment booked, Assessment complete, Accepted, Waitlist, Not Yet Fit). Choosing <b>Accepted</b> offers the $199-to-199-tokens conversion, which can only ever happen once per athlete.</li>
+    <li><b>Contact</b> details and their athletes, each with Elite status, Performance level, and program controls.</li>
+    <li><b>Elite decisions</b>: set the athlete's stage (Applied, Assessment booked, Assessment complete, Accepted, Waitlist, Not Yet Fit). Choosing <b>Accepted</b> offers the $199-to-199-tokens conversion, once per athlete ever, and converting also sends the family the elite-accepted email automatically. Accepting <b>without</b> converting sends nothing.</li>
+    <li><b>Program tag</b>: each athlete carries a home-program badge (Foundations, Performance, or Elite). It defaults to an automatic suggestion from age and Elite status, and staff can override it. It is organizational only, it never blocks a booking, and it drives the buckets on the Clients list and the Roster badges.</li>
+    <li><b>Report cards</b>: the "New report card" button on an accepted Elite athlete opens the skill-rating form. See <a href="#p1-reports">Progress report cards</a>.</li>
     <li><b>Performance placement</b>: flip an athlete to Advanced to unlock the advanced class in their age band.</li>
     <li><b>Wallet</b>: balance, full token history, and a manual adjustment button (see <a href="#p2-tokens-admin">AFC Tokens</a>).</li>
-    <li><b>Bookings</b> (upcoming and past), <b>coaches they have trained with</b>, <b>reward tokens earned</b>, <b>products</b>, and the <b>waiver</b> date.</li>
+    <li><b>Bookings</b> (upcoming and past), <b>coaches they have trained with</b>, <b>reward tokens earned</b>, <b>groups</b>, and the <b>waiver</b> date.</li>
     <li><b>Coach notes</b> ride along on bookings (the notes field in the booking form) so the assigned coach sees context at check-in.</li>
   </ul>
+  <figure><img width="1600" height="1075" src="images/admin-client-elite.webp" alt="Elite decision on client profile" loading="lazy" /><figcaption>The athlete card on a profile: program tag, Elite status dropdown, the one-time $199 conversion, and Save decision.</figcaption></figure>
   <h4>Leads</h4>
   <p>New-family signals from the contact form, Elite applications, the path finder quiz, signups, and guest bookings collect at <b>New leads</b> (linked from the Clients page). Each shows source and details, so you can follow up before they become clients.</p>
   <figure><img width="1600" height="1075" src="images/admin-leads.webp" alt="Leads" loading="lazy" /><figcaption>The leads inbox: who asked, from where, and what they said.</figcaption></figure>
@@ -867,15 +1161,20 @@
 </section>
 
 <section class="doc" id="p2-tokens-admin">
-  <h3>AFC Tokens (admin) <a class="hash" href="#p2-tokens-admin">#</a></h3>
-  <p class="lede">The reward engine's control room: the referral tracker, every reward token issued, load amounts, and manual balance adjustments.</p>
+  <h3>AFC Tokens &amp; rewards (admin) <a class="hash" href="#p2-tokens-admin">#</a></h3>
+  <p class="lede">The reward engine's control room, and since July also where every pricing lever lives: the Elite rate ladder, the loyalty ladder, and the referral rewards are all editable here, no developer needed.</p>
   <div class="shots-2">
     <figure><img width="1600" height="1075" src="images/admin-tokens.webp" alt="Tokens admin" loading="lazy" /><figcaption>Referrals: who referred whom, pending versus paid out, with dates.</figcaption></figure>
-    <figure><img width="1600" height="1075" src="images/admin-tokens-2.webp" alt="Reward ledger" loading="lazy" /><figcaption>Every reward token issued, with its trigger. Load amounts below are locked to 1:1.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-elite-rates.webp" alt="Elite rates editor" loading="lazy" /><figcaption>The Elite rates panel: drop-in and pack rates per format. This is what packs and Elite checkouts price from.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-loyalty-ladder.webp" alt="Loyalty ladder editor" loading="lazy" /><figcaption>The loyalty ladder: session thresholds, reward type (tokens, free session, camp discount), and the family-facing label.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/admin-referral-rewards.webp" alt="Referral rewards editor" loading="lazy" /><figcaption>Referral rewards: Foundations block discounts per length, and token amounts for Performance &amp; Elite.</figcaption></figure>
   </div>
   <ul class="plain">
-    <li><b>Referral tracker</b>: each referred family with status "Pending first session" or "Paid out". The payout (100 + 25) fires by itself when their first paid session completes.</li>
+    <li><b>Referral tracker</b>: each referred family with status "Pending first session" or "Paid out". Payouts fire by themselves when their first paid session or block completes.</li>
     <li><b>Record referral</b>: for word-of-mouth cases with no link. Pick the referrer and the new family; the tracker takes it from there.</li>
+    <li><b>Elite rates</b>: every drop-in and pack rate per format. Existing packs keep the rate they were bought at; changes apply to new purchases and new bookings only.</li>
+    <li><b>Loyalty rewards ladder</b>: thresholds, reward types, token amounts or percent-off, and labels. "Restore defaults" brings back the stock 15 / 30 / 40 ladder.</li>
+    <li><b>Referral rewards</b>: the Foundations per-block friend discount and referrer tokens, plus the Performance &amp; Elite token pair (100 / 25 today).</li>
     <li><b>Reward tokens issued</b>: an audit list of every referral and loyalty grant, with family, amount, and trigger.</li>
     <li><b>Load amounts editor</b>: change the quick-pick amounts parents see. Whatever you enter stays 1 token per dollar; the editor cannot create bonuses.</li>
     <li><b>Manual adjustments</b> live on the client profile (Clients &rarr; family &rarr; wallet &rarr; Adjust): add or remove tokens with a note. Use it for goodwill, corrections, late-cancel forfeits, and CoachIQ migration credits.</li>
@@ -883,6 +1182,21 @@
   <div class="faq">
     <div class="qa"><p class="q">A family says "we referred the Smiths, where are our 100 tokens?"</p><p class="a">Open the tracker. If the Smiths show Pending, their first paid session has not completed yet. If they are not listed at all, the link was not used: record the referral manually and it will pay on their next completed paid session.</p></div>
     <div class="qa"><p class="q">Can I hand out tokens as a goodwill gesture?</p><p class="a">Yes: wallet adjustment on the client profile, with a note that says why. It shows in their history like any other line.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-feedback">
+  <h3>Feedback board (Kaizen) <a class="hash" href="#p2-feedback">#</a></h3>
+  <p class="lede">Everything from the <a href="#p1-feedback">parent feedback form</a>, plus the team's own ideas, on one board. The habit to build: review it together once a week and move cards.</p>
+  <figure><img width="1600" height="1075" src="images/admin-feedback.webp" alt="Admin feedback board" loading="lazy" /><figcaption>The board: counts up top, source filters, and every card with one-tap triage.</figcaption></figure>
+  <ul class="plain">
+    <li><b>Sources</b>: Parents (always anonymous), Coaches, and Team. Filter pills switch between them.</li>
+    <li><b>Triage</b>: each card moves New &rarr; <b>Planned</b> &rarr; <b>Implemented</b>, or <b>Declined</b>, with an optional decision note. The triager's name is stamped so decisions have an owner.</li>
+    <li><b>Add an idea</b> lets staff drop thoughts straight on the board; board settings hold the review-cadence line and a coach-anonymity toggle.</li>
+    <li>The whole team can <b>see</b> the board (coach logins included); only managers triage.</li>
+  </ul>
+  <div class="faq">
+    <div class="qa"><p class="q">Should we reply to feedback?</p><p class="a">There is nothing to reply to for parent cards: they are anonymous by design. The reply is the change itself, plus the "Implemented" column growing over time.</p></div>
   </div>
 </section>
 
@@ -896,7 +1210,10 @@
   <ul class="plain">
     <li><b>The log</b> shows the last 100 sends: sent, failed, or simulated (when no email key is configured). Failures show the provider's error, which is how you spot the sandbox limit.</li>
     <li><b>Editable here</b>: booking confirmation, receipt, session reminder, cancellation, email verification, and password reset. Merge fields like <code>{{customerName}}</code> fill themselves.</li>
-    <li><b>Everything else</b> (welcome, guest account, Elite set, rewards set, payout, and more) ships from the designed Royal Crest set. Review every one of the 34 designs in the <a href="https://afcemails.netlify.app" target="_blank" rel="noopener">email review gallery</a>, with each email's trigger and copy.</li>
+    <li><b>Everything else</b> (welcome, guest account, Elite set, rewards set, payout, and more) ships from the designed set, restyled in July to the same charcoal-and-gold look as the site. Review every design in the <a href="https://afcemails.netlify.app" target="_blank" rel="noopener">email review gallery</a>, with each email's trigger and copy.</li>
+    <li><b>Verification codes now lead the subject line</b> ("482913 is your AFC verification code"), so phones surface and auto-fill the code without opening the email.</li>
+    <li>Three <b>campaign series</b> (client import, leads, activation: 8 emails) are designed and reviewable in the gallery, but they are <b>templates only</b>, nothing sends them yet. See <a href="#p4-limits">Known limits</a>.</li>
+    <li>Foundations sends are automatically <b>signed by Mike</b> (photo, phone, email) instead of Andre. No setup needed per email.</li>
     <li>There is no "compose an email" button: everything is event-driven. See <a href="#p3-emails">which emails go out, and when</a>.</li>
   </ul>
   <div class="faq">
@@ -922,12 +1239,19 @@
 </section>
 
 <section class="doc" id="p2-roster">
-  <h3>Class Roster <a class="hash" href="#p2-roster">#</a></h3>
-  <p class="lede">Who is coming to class: every Foundations and Performance class instance with its enrolled athletes, ages, parent contacts, and booking status.</p>
-  <figure><img width="1600" height="1075" src="images/admin-roster.webp" alt="Class roster" loading="lazy" /><figcaption>Grouped by class and start time. Print it or read it off a phone at the field.</figcaption></figure>
+  <h3>Foundations Roster <a class="hash" href="#p2-roster">#</a></h3>
+  <p class="lede">Mikey's field sheet: every Foundations class with its enrolled athletes, grouped by day, sport, age band, and time. Built for reading off a phone at the park, or printing.</p>
+  <figure><img width="1600" height="1075" src="images/admin-roster.webp" alt="Foundations roster" loading="lazy" /><figcaption>Per class: enrolled count against capacity, each athlete with age, program badge, allergy flag, parent contact, block length, and status.</figcaption></figure>
+  <ul class="plain">
+    <li><b>Stat cards</b>: athletes enrolled, classes running, open spots.</li>
+    <li><b>Per-athlete row</b>: age, program badge, a red <b>Allergy</b> pill when the profile has one (expand for the full medical and emergency detail), the parent's email and phone linked to their profile, the block ("4-week"), any swapped week ("1 wk &rarr; Friday Soccer"), and booking status.</li>
+    <li><b>Export CSV</b> for everything or per class, <b>Print</b>, search by athlete or parent, and toggles for finished blocks and unenrolled Foundations athletes.</li>
+    <li>Coach logins with own-data scope see only their own classes; owners see everything.</li>
+  </ul>
   <div class="faq">
-    <div class="qa"><p class="q">What shows up here versus Bookings?</p><p class="a">Roster only shows class-type sessions (Foundations and the six Performance classes), grouped per class meeting. Bookings shows everything individually.</p></div>
-    <div class="qa"><p class="q">Mikey wants his Foundations list for Saturday. Fastest path?</p><p class="a">This page. It is grouped and ordered by start time, with parent phone and email right on the row.</p></div>
+    <div class="qa"><p class="q">What shows up here versus Bookings?</p><p class="a">Roster shows Foundations enrollments grouped per class meeting. Bookings shows every booking individually, all programs.</p></div>
+    <div class="qa"><p class="q">Mikey wants his Saturday list. Fastest path?</p><p class="a">This page, on his phone. Grouped and ordered by start time, contacts on the row, allergies flagged in red.</p></div>
+    <div class="qa"><p class="q">Who can see it?</p><p class="a">Anyone with Bookings access. Give Mikey a coach login and grant bookings view, and this page is his.</p></div>
   </div>
 </section>
 
@@ -946,6 +1270,11 @@
     <li><b>Templates</b>: <b>Coach</b> = own check-in and availability, view own bookings and clients, nothing else. <b>Front desk</b> = manage bookings and clients, view availability, services, payments, and coaches, across all data. Or hand-pick sections for a custom role.</li>
     <li>Coach Pay is deliberately <b>never in the Coach template</b>. Grant it only to Andre and Sahand.</li>
     <li>Everyone can change their own password here (staff see "My account" instead of full Settings).</li>
+  </ul>
+  <h4>Two settings worth knowing</h4>
+  <ul class="plain">
+    <li><b>Game film Dropbox URL</b>: paste a Dropbox "file request" link here and every family's account page Game Film card goes live, linking straight to it. Empty means the card shows its "coming soon" standby state.</li>
+    <li><b>Mike's Foundations phone</b>: shown on the Foundations page and stamped into every Foundations email signature. It ships as (949) 309-6076; clearing it hides the line.</li>
   </ul>
   <div class="faq">
     <div class="qa"><p class="q">What should Sahand's login be?</p><p class="a">Front desk template plus Coach Pay (view or manage as Andre prefers) is the intended shape: bookings, clients, and the payout machinery, without site content or settings unless wanted.</p></div>
@@ -967,12 +1296,18 @@
     <tr><th>Guest books</th><td>Booking confirmation + receipt, plus a "create your account" invitation</td></tr>
     <tr><th>Booking paid</th><td>Booking confirmation + receipt (with the add-to-calendar link and the 24-hour policy)</td></tr>
     <tr><th>Booking cancelled / refunded</th><td>Cancellation notice</td></tr>
-    <tr><th>Password reset requested</th><td>Password reset code</td></tr>
+    <tr><th>Password reset requested</th><td>Password reset code (the code leads the subject line)</td></tr>
+    <tr><th>Foundations block paid</th><td>Confirmation listing every week (plus a receipt for card/cash), <b>signed by Mike</b> with his phone and email</td></tr>
+    <tr><th>Account created while booking, and paid</th><td>One combined <b>welcome + confirm email + booking details + receipt</b> instead of three separate emails</td></tr>
+    <tr><th>Elite application submitted</th><td>Notification to the business inbox + a branded auto-reply to the applicant with next steps</td></tr>
+    <tr><th>Elite accepted (with the $199 conversion)</th><td>The elite-accepted welcome: "{athlete} is in", tokens noted. Accepting without converting sends nothing.</td></tr>
+    <tr><th>Elite pack purchased</th><td>A simple text receipt: "Your Elite {N}-pack is ready"</td></tr>
+    <tr><th>Closed group created</th><td>One invite email per invited family, carrying their personal confirm link</td></tr>
     <tr><th>Recurring month books</th><td>One confirmation listing all the month's dates and tokens spent</td></tr>
     <tr><th>Rebook window opens</th><td>"Keep the slot? 48 hours" reminder</td></tr>
     <tr><th>15th and 30th, 8:30 AM Pacific</th><td>Coach payout summary to Andre (CC Sahand once set)</td></tr>
   </table>
-  <p><b>Built and designed but not yet automated</b> (do not promise these): the 24-hour session reminder, post-session thank-you series, win-back, low balance, tokens-loaded and tokens-returned receipts, Elite acceptance, assessment follow-up, contact auto-reply, and the subscription pair (on hold with the auto-reload decision).</p>
+  <p><b>Built and designed but not yet automated</b> (do not promise these): the 24-hour session reminder, post-session thank-you series, win-back, low balance, tokens-loaded and tokens-returned receipts, assessment follow-up, contact auto-reply, the subscription pair (on hold with the auto-reload decision), and the three <b>campaign series</b> (client import, leads, activation): all designed in the gallery, none wired to send.</p>
   <div class="faq">
     <div class="qa"><p class="q">Parents ask if they get a reminder before the session.</p><p class="a">Not yet, and do not promise it. The reminder email is designed and waiting on its automation. The confirmation email's add-to-calendar link is the current answer.</p></div>
   </div>
@@ -994,8 +1329,8 @@
   <h3>What marking a session "Completed" triggers <a class="hash" href="#p3-completed">#</a></h3>
   <p class="lede">Completed is the platform's payday moment. It fires whether the coach checked the athlete in or staff set the status by hand.</p>
   <ol class="steps">
-    <li><b>Loyalty count</b>: the athlete's completed-session total ticks up. Crossing 8, 18, or 40 automatically drops 25, 50, or 100 tokens into the family wallet, each milestone once per athlete.</li>
-    <li><b>Referral payout</b>: if this family was referred and this is their first completed <b>paid</b> session, the referrer gets 100 tokens and this family gets 25. The referral flips to Paid out in the tracker.</li>
+    <li><b>Loyalty count</b>: the athlete's completed-session total ticks up. Crossing a ladder milestone (15 / 30 / 40 by default) automatically drops the reward: tokens straight to the wallet, or a free-session / camp-discount voucher marked Ready on the family's Rewards page. Each milestone pays once per athlete.</li>
+    <li><b>Referral payout</b>: if this family was referred and this is their first completed <b>paid</b> session, the tokens pay out (100 to the referrer and 25 to the family for Performance/Elite; the matching dollar amounts for a Foundations block). The referral flips to Paid out in the tracker.</li>
     <li><b>Coach pay</b>: only check-in (or an admin logging on the coach's behalf) creates the priced session log. Flipping a status by hand does not pay a coach, which is why the Unlogged panel exists.</li>
   </ol>
   <div class="callout">
@@ -1015,9 +1350,14 @@
     <tr><th>Outbound email</th><td><b>Sandbox-limited</b> until the sending domain is verified with Resend. On the demo, only the test inbox actually receives; other addresses log as failed in the Email Log. From-address still shows the Resend onboarding domain.</td></tr>
     <tr><th>Coach rates</th><td>Only Lucas's pay profile is filled and active (his rates are the worked reference). Sebi, Sebass, Ayman, Sergio, and Mikey wait on Andre's numbers, and their sessions cannot be pay-logged until then.</td></tr>
     <tr><th>Session reminder emails</th><td>Designed, not yet automated. Do not promise "you'll get a reminder the day before".</td></tr>
-    <tr><th>Elite acceptance email</th><td>Designed, not wired. Acceptance is a personal call or email from the team today.</td></tr>
+    <tr><th>Foundations term dates</th><td>Blocks currently start at the <b>next occurrence of the class day</b>, whenever the family enrolls. Real fixed term start dates wait on Mike's calendar. Do not promise a specific "term start".</td></tr>
+    <tr><th>Campaign email series</th><td>The client-import, leads, and activation series (8 emails) are <b>designs only</b>. Nothing sends them: no trigger, no schedule. Review them in the gallery, do not promise them.</td></tr>
+    <tr><th>Game film card</th><td>Shows "coming soon" until the Dropbox file-request URL is pasted into Settings. Until then, do not tell families to upload film.</td></tr>
     <tr><th>Performance class schedule</th><td>Class cards say "weekly day and time announced soon". Days, times, and the 8-pack purchase flow (waits on Stripe) are pending.</td></tr>
-    <tr><th>Perk thresholds</th><td>Jersey at 10 sessions, booklet at 20, Sebi video at 500 tokens spent, merch at 1,000: placeholders until Andre confirms.</td></tr>
+    <tr><th>Reward ladder numbers</th><td>The 15 / 30 / 40 ladder and the Elite rate ladder are <b>editable defaults</b> awaiting Andre's final call, like the perk thresholds (jersey at 10, booklet at 20, Sebi video at 500 tokens, merch at 1,000).</td></tr>
+    <tr><th>Report cards</th><td>In-portal only, Elite only, no email notification. Tell the family a card is waiting.</td></tr>
+    <tr><th>Closed group edges</th><td>Invite emails use a plain template; confirming or declining notifies nobody, and an emptying pack sends no warning. The biggest bookable group format today is 3 players (a 4-6 player service is not in the catalog yet). Admin cannot create or dissolve groups.</td></tr>
+    <tr><th>Elite packs, admin side</th><td>No admin screen grants or tops up pack sessions. Fix mistakes with a token adjustment or a comped booking.</td></tr>
     <tr><th>Missed-emails inbox</th><td>Replies to our emails land in the regular inbox, not in the admin. The in-admin inbox and direct reply are deferred pending an inbound-email decision.</td></tr>
     <tr><th>Google Calendar</th><td>No two-way sync. Every confirmation email has an add-to-calendar link, which covers most asks.</td></tr>
     <tr><th>Subscriptions / auto-reload</th><td>On hold pending the bonus decision. Nothing to sell yet.</td></tr>
@@ -1034,12 +1374,16 @@
     <tr><th>Demo owner login</th><td><code>andre@afsoccer.club</code> / <code>demo1234</code> at <code>/admin/login</code></td></tr>
     <tr><th>Demo parent login</th><td><code>parent@example.com</code> / <code>demo1234</code> at <code>/login</code></td></tr>
     <tr><th>Tokens</th><td>$1 = 1 token, flat, never expire. Loads: $100 / $250 / $500 / $1,000 / custom $20 to $10,000.</td></tr>
-    <tr><th>Elite ladder</th><td>Private 120 / 105 / 95 / 85 &middot; 2P 180 / 75 / 70 / 65 &middot; 3P 225 / 60 / 55 / 50 &middot; 4-6P 240 / 50 / 45 / 40 (drop-in / 4-pack / 8-pack / 12-pack, per session)</td></tr>
-    <tr><th>Elite tier unlocks</th><td>Largest single load: $120 / $420 / $760 / $1,020. Dashboard-only numbers.</td></tr>
-    <tr><th>Assessment</th><td>$199, converts to 199 tokens on acceptance, once per athlete ever.</td></tr>
+    <tr><th>Elite rates (per athlete)</th><td>Drop-in: Private $120 &middot; 2P $90 &middot; 3P $75 &middot; 4-6P $60. Pack rates: Private 105/95/85 &middot; 2P 75/70/65 &middot; 3P 60/55/50 &middot; 4-6P 50/45/40 (4 / 8 / 12-pack).</td></tr>
+    <tr><th>Elite packs</th><td>Prepaid sessions of one format, no expiry. Private totals: $420 / $760 / $1,020. Cancel 24h+ ahead returns the session to the pack.</td></tr>
+    <tr><th>Assessment</th><td>$199, converts to 199 tokens on acceptance (once per athlete ever); converting also sends the acceptance email.</td></tr>
+    <tr><th>Foundations</th><td>Ages 2.5-12, $20 a class: 4-week $80 &middot; 9-week $180. Age picks the locked time; one payment per block; same-week same-time swaps.</td></tr>
+    <tr><th>Closed groups</th><td>3-6 families, weekly reserved slot, held 4 weeks ahead. Invitees join without their own assessment; each family pays their own seat.</td></tr>
     <tr><th>Performance</th><td>6 classes (bands 8-10, 11-13, 14+; Beginner and Advanced each). $40 drop-in, 8-pack $280 ($35/session). Advanced needs staff placement.</td></tr>
-    <tr><th>Loyalty</th><td>8 / 18 / 40 completed sessions &rarr; 25 / 50 / 100 tokens, per athlete, automatic.</td></tr>
-    <tr><th>Referral</th><td>100 to the referrer, 25 to the new family, on the new family's first completed paid session.</td></tr>
+    <tr><th>Loyalty ladder</th><td>15 &rarr; 25 tokens &middot; 30 &rarr; free session voucher &middot; 40 &rarr; 20% off a camp. Per athlete, automatic, editable in admin.</td></tr>
+    <tr><th>Referral</th><td>Performance/Elite: 100 to the referrer, 25 to the friend, at the friend's first completed paid session. Foundations: instant $12 (4-week) or $15 (9-week) off the friend's first block, and the same $ in tokens to the referrer.</td></tr>
+    <tr><th>Discounts</th><td>Codes are created under Services &amp; Pricing. One discount per booking: code, voucher, or referral discount, never stacked.</td></tr>
+    <tr><th>Foundations contact</th><td>Mike Monary &middot; (949) 309-6076 &middot; mikey@afsoccer.club (auto-signed on Foundations emails).</td></tr>
     <tr><th>Recurring window</th><td>From the 15th: 48 hours to keep the slot, then it releases. Reminder at 7:00 AM Pacific.</td></tr>
     <tr><th>Coach pay (Lucas ref.)</th><td>$35 base +$5/athlete, $80 cap &middot; shadow $25 &middot; camp $35. 1 athlete = base only.</td></tr>
     <tr><th>Payout email</th><td>15th (1-15) and 30th/last day (16-end), ~8:30 AM Pacific, to dre@ (CC Sahand when set).</td></tr>
