@@ -156,6 +156,10 @@
     display: flex; align-items: center; justify-content: center;
   }
   ul.plain { max-width: 74ch; padding-left: 20px; margin: 10px 0; }
+  /* A quiet aside: the reason behind a rule, when it is worth knowing but is not
+     itself an instruction. Lighter than .callout, which is for things that bite. */
+  p.note { max-width: 74ch; margin: 10px 0; padding-left: 12px; border-left: 2px solid var(--line);
+           color: var(--muted); font-size: 14px; }
   ul.plain li { margin: 5px 0; }
   p { max-width: 74ch; }
   b, strong { color: var(--cream); }
@@ -264,7 +268,7 @@
   <div class="mark">AFC</div>
   <div>
     <h1>AFC Platform Training Guide</h1>
-    <div class="sub">How every part of the booking platform works, for Andre, Mikey, and Sahand</div>
+    <div class="sub">How every part of the booking platform works &mdash; for the AFC team</div>
   </div>
   <div class="spacer"></div>
   <a class="btn noprint" href="javascript:window.print()">Print</a>
@@ -280,12 +284,14 @@
   <p class="search-meta" id="searchMeta"></p>
   <nav class="toc" id="toc">
     <div class="part">Start here</div>
+    <a href="#p0-changed">What changed since 9 July</a>
     <a href="#overview">What this platform is</a>
     <div class="part">Part 1 &middot; Parent side</div>
     <a href="#p1-signup">Creating an account</a>
     <a href="#p1-login">Logging in &amp; password reset</a>
     <a href="#p1-booking">Booking a session</a>
     <a href="#p1-tokens">AFC Tokens wallet</a>
+    <a href="#p1-cancel">What a cancellation is worth</a>
     <a href="#p1-foundations">Foundations enrollment</a>
     <a href="#p1-elite">The Elite journey</a>
     <a href="#p1-packs">Elite session packs</a>
@@ -295,10 +301,12 @@
     <a href="#p1-reports">Progress report cards</a>
     <a href="#p1-feedback">Feedback (Kaizen)</a>
     <a href="#p1-recurring">Recurring weekly slots</a>
-    <a href="#p1-account">Athletes, waiver &amp; account</a>
+    <a href="#p1-waiver">The waiver &amp; signatures</a>
+    <a href="#p1-account">Athletes &amp; account</a>
     <div class="part">Part 2 &middot; Admin side</div>
     <a href="#p2-dashboard">Dashboard</a>
     <a href="#p2-bookings">Bookings</a>
+    <a href="#p2-session-tools">Working a session</a>
     <a href="#p2-checkin">Session Check-In</a>
     <a href="#p2-coaches">Coaches</a>
     <a href="#p2-availability">Availability</a>
@@ -306,16 +314,20 @@
     <a href="#p2-discounts">Discount codes</a>
     <a href="#p2-clients">Clients &amp; Leads</a>
     <a href="#p2-payments">Payments &amp; refunds</a>
+    <a href="#p2-money">The Money &amp; Collections</a>
+    <a href="#p2-payment-requests">Payment requests</a>
+    <a href="#p2-refund-queue">Refund requests</a>
     <a href="#p2-coachpay">Coach Pay</a>
     <a href="#p2-tokens-admin">AFC Tokens &amp; rewards (admin)</a>
     <a href="#p2-feedback">Feedback board (admin)</a>
     <a href="#p2-emails">Email Log &amp; templates</a>
     <a href="#p2-content">Site Content</a>
+    <a href="#p2-performance-interest">Performance interest</a>
     <a href="#p2-roster">Foundations Roster</a>
     <a href="#p2-settings">Settings &amp; permissions</a>
     <div class="part">Part 3 &middot; Behind the scenes</div>
     <a href="#p3-emails">Which emails go out, and when</a>
-    <a href="#p3-crons">The two daily automations</a>
+    <a href="#p3-crons">The daily automations</a>
     <a href="#p3-completed">What "Completed" triggers</a>
     <div class="part">Part 4 &middot; Honesty section</div>
     <a href="#p4-limits">Known limits: never over-promise</a>
@@ -330,15 +342,44 @@
   <span class="eyebrow">AFC &middot; Internal training</span>
   <h2 class="title">Know the platform like you built it.</h2>
   <p>This guide walks through every screen a parent, a coach, or an admin will ever touch. After reading it, anyone on the team should be able to answer any question a parent or coach asks. Use the search box on the left, or print the whole thing.</p>
-  <p style="margin-top:10px; font-size:13px; color:var(--gold);">Updated July 9, 2026: Foundations weekly enrollment, Elite session packs &amp; closed groups, the Assessment Pathway video, discount codes, the new rewards ladder, progress report cards, the Kaizen feedback board, and the redesigned account page.</p>
+  <p style="margin-top:10px; font-size:13px; color:var(--gold);">Updated August 25, 2026. The platform moved a long way between 9 July and now &mdash; card payments went live, tokens stopped being something you can buy, Performance came off a published calendar, and the waiver was rebuilt. <b>Start at <a href="#p0-changed" style="color:var(--gold)">What changed since 9 July</a>: some of what this guide used to say is now wrong, and that page lists it.</b></p>
 </div>
 
 <!-- ============================================================ START -->
+<section class="doc" id="p0-changed">
+  <h3>What changed since 9 July <a class="hash" href="#p0-changed">#</a></h3>
+  <p class="lede">This guide was frozen on 9 July 2026 and the platform did not stop. Read this page before you trust an older memory of how something works.</p>
+
+  <div class="callout warn">
+    <span class="tag">Four things this guide used to say that are now WRONG</span>
+    <ol class="steps">
+      <li><b>"Card checkout is demo mode, no real charge."</b> Stripe went live in July. <b>Every card payment on afctraining.com is real money.</b> If you have ever told a parent otherwise, that is the one worth correcting.</li>
+      <li><b>"Load AFC Tokens: $100 / $250 / $500 / $1,000."</b> Parents cannot buy tokens at all any more. Tokens are <a href="#p1-tokens">grant-only</a>.</li>
+      <li><b>"Advanced classes need placement."</b> Level stopped gating anything on 5 Aug. Age band is the only door. See <a href="#p1-performance">Performance</a>.</li>
+      <li><b>"Six weekly classes across three age bands", and the $280 8-pack.</b> Both retired. Performance is demand-led now.</li>
+    </ol>
+  </div>
+
+  <h4>What is new, and where it is written up</h4>
+  <table class="facts">
+    <tr><th>Money</th><td><a href="#p2-money">The Money + Collections</a> &middot; <a href="#p2-payment-requests">payment requests, the three doors</a> &middot; <a href="#p2-refund-queue">refund requests</a> &middot; <a href="#p1-cancel">what a cancellation is worth</a> &middot; the card processing fee (2.9% + 30&cent;) on every card charge.</td></tr>
+    <tr><th>Sessions</th><td><a href="#p2-session-tools">one bubble per session, add athlete + format conversion, change coach, bulk location</a> &middot; the day view opening on your first session &middot; typing a booking time the schedule does not offer.</td></tr>
+    <tr><th>Programs</th><td><a href="#p1-performance">Performance goes demand-led</a> + <a href="#p2-performance-interest">the interest screen</a> &middot; Foundations sells the block that is <i>starting</i>, with a session picker and a per-session roster &middot; the Elite application <a href="#p1-elite">stops dead-ending</a>.</td></tr>
+    <tr><th>Trust &amp; access</th><td><a href="#p1-waiver">the rebuilt waiver and its signature ledger</a> &middot; a waiver column and unsigned filter on Clients &middot; emailed sign-in codes, and passwords that a password manager can finally save &middot; the admin nav becoming a real menu on a phone.</td></tr>
+    <tr><th>Parent portal</th><td>Prepaid sessions surfaced on the athlete&rsquo;s card with one-tap rebooking &middot; a help door with Andre&rsquo;s walkthrough videos &middot; parents booking their own weekly recurring slot.</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <span class="tag">Screenshots are older than the words</span>
+    <p>The captures in this guide are from 9 July unless a caption says otherwise. Where a screen has been redesigned since &mdash; the wallet, Performance, the payments page &mdash; <b>trust the text over the picture</b>. Retaking the full set is a separate job; the README says how.</p>
+  </div>
+</section>
+
 <section class="doc" id="overview">
   <h3>What this platform is <a class="hash" href="#overview">#</a></h3>
   <p class="lede">One website, three surfaces. Everything runs on the same database, so a booking made anywhere shows up everywhere.</p>
   <ul class="plain">
-    <li><b>The public site + parent portal</b>: families browse programs, book sessions, load AFC Tokens, and manage their athletes at <code>afsoccer.club</code> (currently the afcdemo Netlify site).</li>
+    <li><b>The public site + parent portal</b>: families browse programs, book sessions, pay, sign the waiver and manage their athletes at <code>afctraining.com</code>. <b>The old <code>afsoccer.club</code> domain is no longer ours in any useful sense</b> &mdash; the web address now points at a different site entirely, though the mailbox still exists, so a stale link sends a parent somewhere that is not AFC.</li>
     <li><b>The admin Control Center</b> at <code>/admin</code>: dashboards, bookings, clients, payments, coach pay, emails, and site copy. What each person sees depends on their permissions.</li>
     <li><b>The coach Session Check-In</b> at <code>/admin/check-in</code>: a phone-first screen where a coach taps who showed up after a session. That tap drives coach pay, loyalty rewards, and referral payouts.</li>
   </ul>
@@ -445,7 +486,7 @@
     <figure><img width="1600" height="1075" src="images/book-details-signedin.webp" alt="Details step signed in" loading="lazy" /><figcaption>Signed-in parents tap a saved athlete instead of retyping.</figcaption></figure>
     <figure><img width="1600" height="1075" src="images/book-5-waiver.webp" alt="Waiver modal" loading="lazy" /><figcaption>The waiver: parents must scroll to the end before I agree unlocks.</figcaption></figure>
     <figure><img width="1600" height="1075" src="images/book-6-review.webp" alt="Review step" loading="lazy" /><figcaption>Step 5: review everything, then continue to payment.</figcaption></figure>
-    <figure><img width="1600" height="1075" src="images/book-7-checkout.webp" alt="Checkout" loading="lazy" /><figcaption>Checkout for an Elite session: pay with tokens, use a pack session, or pay by card, with a discount-code field below. Card checkout is demo mode for now.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/book-7-checkout.webp" alt="Checkout" loading="lazy" /><figcaption>Checkout for an Elite session: tokens (pre-selected when the family holds any), a pack session, or a card, with a discount-code field below. <b>Card checkout is live Stripe &mdash; real money.</b></figcaption></figure>
   </div>
 
   <h4>Paying, and what happens after</h4>
@@ -473,33 +514,60 @@
 
 <section class="doc" id="p1-tokens">
   <h3>AFC Tokens: the wallet <a class="hash" href="#p1-tokens">#</a></h3>
-  <p class="lede">One family balance for everything. <b>1 token = 1 dollar, always.</b> No bonus tokens on bigger loads, no expiry, works on any program. Wallet lives at Account &rarr; AFC Tokens.</p>
+  <p class="lede"><b>1 token = 1 dollar, always.</b> No expiry, works on any program except the $199 Assessment Pathway. Wallet lives at Account &rarr; My Wallet.</p>
 
-  <div class="shots-2">
-    <figure><img width="1600" height="1075" src="images/parent-wallet.webp" alt="Wallet page" loading="lazy" /><figcaption>Balance up top, then load amounts: $100, $250, $500, $1,000, or a custom amount.</figcaption></figure>
-    <figure><img width="1600" height="1075" src="images/book-checkout-tokens.webp" alt="Checkout with tokens" loading="lazy" /><figcaption>At checkout, tokens appear as the first payment option when the balance covers the session.</figcaption></figure>
+  <div class="callout warn">
+    <span class="tag">Changed 15 Aug 2026 &mdash; parents can no longer BUY tokens</span>
+    <p>Tokens are <b>grant-only</b> now. There is no load page, no $100 / $250 / $500 / $1,000 buttons, no "top up". The only ways a token enters a family&rsquo;s wallet are things AFC hands them: a cancellation credit, a comp or correction an admin makes, a reward, or the difference returned when a session changes format.</p>
+    <p><b>Why it went:</b> every token purchase that had ever happened was a parent converting dollars into dollars to spend seconds later &mdash; a currency-exchange step in front of checkout. One family ran two card charges sixteen minutes apart to afford one $85 private, because the amount they needed was not knowable until they had already paid once.</p>
+    <p><b>Nobody lost anything.</b> Existing balances are untouched and spend exactly as before. A family at zero simply never meets the concept.</p>
   </div>
 
   <h4>The rules parents ask about</h4>
   <table class="facts">
-    <tr><th>Loading</th><td>Quick amounts $100 / $250 / $500 / $1,000, or custom from $20 up to $10,000. Always 1 token per dollar.</td></tr>
-    <tr><th>Spending</th><td>At checkout, "Pay N tokens" shows whenever the balance covers the price. Tokens confirm the session instantly.</td></tr>
-    <tr><th>Expiry</th><td>Never. That is a selling point over the old session packs.</td></tr>
-    <tr><th>Cancelling</th><td>A parent can cancel any upcoming session from their account until its start time. If it was paid with tokens, the tokens go straight back to the wallet automatically, with a refund line in their history.</td></tr>
-    <tr><th>The 24-hour policy</th><td>Terms and the confirmation email say: give at least 24 hours notice to cancel or reschedule. A late cancel or no-show may forfeit the session or its tokens.</td></tr>
-    <tr><th>Elite prices</th><td>Paying an Elite session with tokens costs the <b>drop-in rate</b> in tokens. The discounted per-session rates now live in <a href="#p1-packs">Elite session packs</a>, bought on this same wallet page, not in a wallet-load tier.</td></tr>
+    <tr><th>Getting them</th><td>Grants only: cancellation credit, an admin comp, a reward, or a format-change return. Never bought.</td></tr>
+    <tr><th>Spending</th><td>Tokens are <b>pre-selected</b> at checkout whenever the family holds any, with a visible <i>Don&rsquo;t use my tokens</i> escape. They no longer have to cover the whole price &mdash; see the split below.</td></tr>
+    <tr><th>Part-paying</th><td><b>Tokens pay what they can and the card takes the rest.</b> The processing fee applies to the <b>card portion only</b>, so spending a reward lowers the fee as well as the bill.</td></tr>
+    <tr><th>Expiry</th><td>Never.</td></tr>
+    <tr><th>The one exception</th><td>Stored value never pays the <b>$199 Assessment Pathway</b>. That is sold as one package through its own door.</td></tr>
+    <tr><th>Cancelling</th><td>See <a href="#p1-cancel">what a cancellation is worth</a> &mdash; the rules changed on 5 Aug 2026.</td></tr>
   </table>
 
   <div class="callout warn">
-    <span class="tag">How the 24-hour policy really works today</span>
-    <p>The system does not enforce the forfeit automatically yet. The online Cancel button works until the session starts and always refunds tokens in full. If a family cancels inside 24 hours and you decide the policy applies, handle it manually: cancel (or let them cancel), then remove the session's tokens with an adjustment in <a href="#p2-tokens-admin">AFC Tokens (admin)</a>, and tell the family why. For a no-show, do not cancel: an admin can mark it cancelled after start, or the coach simply logs the athlete as absent at check-in.</p>
+    <span class="tag">The default is pre-selected on purpose &mdash; do not "fix" it</span>
+    <p>This went through three positions in one day. Auto-apply was rejected (families could not find where the money went), then an opt-in button was rejected after it <b>failed on its first real purchase</b>: Andre bought a $120 session holding 100 tokens and was charged $123.78, because he did not press the button &mdash; a button he had designed and was looking for. Pre-selected with a visible opt-out is findable AND safe by default.</p>
   </div>
 
   <div class="faq">
-    <div class="qa"><p class="q">Do bigger loads earn bonus tokens?</p><p class="a"><b>No, never.</b> The old load-bonus ladder is gone, and so is the old "load more to unlock a cheaper Elite tier" rule. A token is always worth exactly a dollar; Elite families who want a cheaper per-session rate buy a <a href="#p1-packs">session pack</a> instead.</p></div>
-    <div class="qa"><p class="q">Can tokens be refunded to a card?</p><p class="a">Not from the site. Cancellations refund to the wallet. Anything beyond that (cash-out requests) is a manual owner decision outside the platform.</p></div>
-    <div class="qa"><p class="q">Can a family go negative?</p><p class="a">No. If the balance does not cover a price, the token option simply does not appear, and the page suggests loading or paying by card.</p></div>
-    <div class="qa"><p class="q">Where do parents see their history?</p><p class="a">The wallet page lists every load, spend, refund, and reward line with dates and notes.</p></div>
+    <div class="qa"><p class="q">A parent asks how to buy tokens. What do I say?</p><p class="a">They cannot, and they do not need to &mdash; they can pay for anything by card directly. Tokens are how AFC hands value back (a cancellation, a comp, a reward). If you think a family is owed some, that is an admin adjustment, not a purchase.</p></div>
+    <div class="qa"><p class="q">Their balance does not cover the session. Is the token option hidden?</p><p class="a">No, not any more. It pays what it can and the card covers the remainder. The old all-or-nothing rule stranded balances the moment buying stopped &mdash; one family&rsquo;s 10 tokens covered exactly 0 of 14 services.</p></div>
+    <div class="qa"><p class="q">Can tokens be refunded to a card?</p><p class="a">Not by a parent. A family can <b>request</b> a card refund and an admin approves or declines it; see <a href="#p2-refund-queue">the refund request queue</a>.</p></div>
+    <div class="qa"><p class="q">Where do parents see their history?</p><p class="a">The wallet page lists every spend, refund and reward line with dates and notes. It leads with what they hold, not with a shop.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p1-cancel">
+  <h3>What a cancellation is worth <a class="hash" href="#p1-cancel">#</a></h3>
+  <p class="lede"><b>New rules, 5 Aug 2026.</b> Before this, a card-paid session that got cancelled quietly kept the money &mdash; there was no branch for it at all. Now value comes back, and how it comes back depends on who cancelled and what paid for it.</p>
+
+  <table class="facts">
+    <tr><th>Parent cancels</th><td>Value returns as <b>tokens</b>, automatically, matching what they spent. This is the default and it needs nobody&rsquo;s approval.</td></tr>
+    <tr><th>They want the card refunded instead</th><td>They <b>request</b> it; an admin approves or declines. Card money never leaves on a parent&rsquo;s tap. See <a href="#p2-refund-queue">the refund request queue</a>.</td></tr>
+    <tr><th>Admin cancels</th><td><b>Never</b> credits automatically. An admin moving a session by cancel-and-rebook must not silently mint tokens.</td></tr>
+    <tr><th>How much</th><td>The <b>cancellation policy percentage</b> applies, exactly as it does for a token payer. Otherwise a card payer would be better off cancelling late than a token payer on the identical session.</td></tr>
+    <tr><th>The fee</th><td>Credit is calculated on what AFC actually received &mdash; the processing fee never reached us, so it is not ours to give back.</td></tr>
+    <tr><th>Prepaid session credit</th><td>A <b>full</b> refund returns the credit to their pack. Anything less forfeits it &mdash; a credit is one indivisible session, same rule as an Elite pack.</td></tr>
+    <tr><th>Reschedule</th><td>Untouched. Moving a session is not cancelling one.</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <span class="tag">This one was losing families&rsquo; money, silently</span>
+    <p>Two defects sat behind these rules and both are worth knowing, because they are the shape of thing to watch for. <b>Card-paid cancellations returned nothing at all</b> &mdash; measured on the live database the day it was fixed, exactly one family was out of pocket. And separately, <b>a cancelled session that had been paid with a prepaid credit deleted the credit</b>: four credits across three families, roughly $480, all inside four days, all still firing. Nobody complained about either. A family has no reason to open the page where that number lives.</p>
+  </div>
+
+  <div class="faq">
+    <div class="qa"><p class="q">A parent cancels and asks where their money went.</p><p class="a">Their wallet, as tokens, with a line in their history. If they want it on the card instead, they ask &mdash; and Andre decides.</p></div>
+    <div class="qa"><p class="q">Can we approve a card refund after they have spent the credit?</p><p class="a">No, and the system refuses before Stripe moves anything. Paying then would fund both the refund and the session those tokens already bought.</p></div>
   </div>
 </section>
 
@@ -535,7 +603,7 @@
     <figure><img width="1600" height="1075" src="images/foundations-top.webp" alt="Foundations page" loading="lazy" /><figcaption>The Foundations page, now a top-level item in the site nav.</figcaption></figure>
     <figure><img width="1600" height="1075" src="images/foundations-classes.webp" alt="Day chooser" loading="lazy" /><figcaption>"Which day fits you?": each card is a day and sport with its age bands and times.</figcaption></figure>
     <figure><img width="1600" height="1075" src="images/foundations-day-times.webp" alt="Day detail page" loading="lazy" /><figcaption>Each day has its own page; every age row links straight into the wizard with that class preselected.</figcaption></figure>
-    <figure><img width="1600" height="1075" src="images/foundations-mikey.webp" alt="Coach Mikey video" loading="lazy" /><figcaption>Coach Mikey's intro video plus his direct contact: (949) 309-6076, mikey@afsoccer.club.</figcaption></figure>
+    <figure><img width="1600" height="1075" src="images/foundations-mikey.webp" alt="Coach Mikey video" loading="lazy" /><figcaption>Coach Mikey's intro video plus his direct contact: (949) 309-6076, mikey@afctraining.com.</figcaption></figure>
   </div>
 
   <h4>The enrollment wizard, step by step</h4>
@@ -563,7 +631,7 @@
     <li>One checkout pays the <b>whole block</b>, and every week confirms at once.</li>
     <li><b>AFC Tokens</b> pay 1:1 whenever the balance covers the block (signed-in families only, since guests have no wallet).</li>
     <li>A <b>discount code</b> ("Have a discount code?") or a referral discount can come off first; one discount per block, never stacked.</li>
-    <li><b>Card</b> works too (demo mode for now, like everywhere else).</li>
+    <li><b>Card</b> works too &mdash; live Stripe, a real charge, with the card processing fee shown as its own line.</li>
   </ul>
   <div class="shots-2">
     <figure><img width="1600" height="1075" src="images/fnd-checkout-code.webp" alt="Foundations checkout with code" loading="lazy" /><figcaption>Block checkout: all four weeks listed, one price, with a discount code applied.</figcaption></figure>
@@ -604,7 +672,7 @@
   <h4>The journey, step by step</h4>
   <ol class="steps">
     <li>Family applies at <b>/elite/apply</b> (every Elite button on the site points there). The form asks for the athlete, position, level, goals, days that work, and now a <b>format</b>: Private, 2-player, 3-player, or a 4-6 player group. Picking a group format opens a <b>"Who else is in your group?"</b> roster, so a whole crew can apply behind one $199 assessment.</li>
-    <li>The application lands in <a href="#p2-clients">New leads</a>, the business gets a notification email, and the family gets a branded auto-reply with next steps. Applying never grants entry by itself.</li>
+    <li>The application now <b>creates the athlete and the family record</b>, lands in <a href="#p2-clients">New leads</a>, and an athlete aged <b>12 or over is auto-invited</b> to buy the Pathway on the spot. Under 12 waits for one human tap, because Foundations may be the right room. Andre gets a notification; the family gets a branded reply. Applying still never grants Elite entry &mdash; the assessment is what decides that.</li>
     <li>The athlete books and completes the <b>$199 Assessment Pathway</b>. Status on their profile moves Applied &rarr; Assessment booked &rarr; Assessment complete.</li>
     <li>Staff make the call on the athlete's profile: <b>Accepted</b>, <b>Waitlist</b>, or <b>Not Yet Fit</b> (routed to Performance instead, with pride intact).</li>
     <li>On acceptance, tick "Convert" and the $199 becomes <b>199 tokens</b> in the family wallet, once per athlete ever, and the family gets the <b>elite-accepted email</b> automatically.</li>
@@ -616,6 +684,12 @@
     <figure><img width="1600" height="1075" src="images/elite-journey.webp" alt="Elite journey steps" loading="lazy" /><figcaption>The four-step Assessment Pathway on the Elite page.</figcaption></figure>
     <figure><img width="1600" height="1075" src="images/elite-apply.webp" alt="Elite apply form" loading="lazy" /><figcaption>The apply form: parent, athlete, level, goals, days, and the format selector.</figcaption></figure>
     <figure><img width="1600" height="1075" src="images/elite-apply-roster.webp" alt="Group roster on apply" loading="lazy" /><figcaption>Choosing a group format reveals the bring-your-own-group roster.</figcaption></figure>
+  </div>
+
+  <div class="callout warn">
+    <span class="tag">Fixed 4 Aug 2026 &mdash; applying used to be a dead end</span>
+    <p>Submitting the Elite application wrote a lead row and <b>nothing else</b>: no account, no athlete, no status. Buying the $199 Pathway required a status only an admin could set, on a record that had to already exist &mdash; which a fresh applicant had no way to get. Live evidence when it was found: <b>eleven applications, all still sitting at "New Lead", the oldest three weeks old, and zero Assessment Pathways ever sold.</b> One family told Andre they had "created an account"; they had filled in the application, which asks for name, email, phone and athlete, and looks exactly like signing up.</p>
+    <p>Andre&rsquo;s rule, which the build follows: <i>"When someone applies to an assessment, the door is always open. The assessment after is where we make the decision if they move forward or not."</i></p>
   </div>
 
   <h4>Andre's walkthrough video</h4>
@@ -711,30 +785,43 @@
 
 <section class="doc" id="p1-performance">
   <h3>Performance classes <a class="hash" href="#p1-performance">#</a></h3>
-  <p class="lede">Six weekly classes: three age bands, each with a Beginner and an Advanced class. Flat pricing, no acceptance needed, book in seconds.</p>
+  <p class="lede"><b>Demand-led since 15 Aug 2026.</b> A handful of classes actually run and are bookable today; for everything else a family raises their hand and a class opens when enough of them want the same hour.</p>
 
-  <table class="facts">
-    <tr><th>Age band</th><td><b>Beginner</b></td><td><b>Advanced</b></td></tr>
-    <tr><th>Youngers, 8-10</th><td>First Touch</td><td>Dribbling &amp; Moves</td></tr>
-    <tr><th>Intermediate, 11-13</th><td>Passing &amp; Receiving</td><td>Speed of Play</td></tr>
-    <tr><th>Olders, 14+</th><td>Finishing &amp; Fundamentals</td><td>Game Speed</td></tr>
-  </table>
-  <p><b>Pricing:</b> $40 drop-in, or an 8-pack at $280 which works out to $35 per session. (The 8-pack is displayed today but bought offline until card payments go live.)</p>
+  <div class="callout warn">
+    <span class="tag">Rewritten 25 Aug 2026 &mdash; the old six-class grid is gone</span>
+    <p>This guide used to list six classes across three age bands, each Beginner and Advanced, with a placement rule. <b>All of that is retired.</b> Two separate changes did it:</p>
+    <ul class="plain">
+      <li><b>4 Aug:</b> the class list was cut to the three that actually ran. First Touch, Passing &amp; Receiving, Speed of Play and Game Speed no longer exist as bookable classes.</li>
+      <li><b>15 Aug:</b> Performance came off a published calendar entirely. The number that forced it: <b>three Performance bookings in sixty days, and one on the calendar going forward.</b> The classes were not running; the site was advertising a schedule nobody was on.</li>
+    </ul>
+  </div>
+
+  <h4>How it works now</h4>
+  <ol class="steps">
+    <li>The <code>/performance</code> page shows <b>only classes that can actually be booked</b> &mdash; active, and with a weekly hour on an active coach. Assigning that hour in Availability is what publishes a class; pulling it takes the class down.</li>
+    <li>Below them, a family says the athlete&rsquo;s age and which weekly hours work for them.</li>
+    <li>A class opens when <b>4 athletes</b> fit the same age band at the same hour. The page prints that number and the code enforces the same one, so it can never promise a threshold it does not act on.</li>
+    <li>Andre gets an email the moment a group is one short, and again when it crosses. He does not have to watch a screen.</li>
+  </ol>
 
   <h4>Who can book which class</h4>
   <ul class="plain">
-    <li><b>Age band is strict</b> when we know the athlete's birth date: an 11-year-old cannot book First Touch (8-10). The parent gets a calm message pointing to their band's classes.</li>
-    <li>If we do not know the date of birth, Beginner classes allow the booking and staff fix the profile later. No families blocked at the door for missing paperwork.</li>
-    <li><b>Advanced classes need placement.</b> Only staff can flag an athlete as Advanced, on their profile under Clients. Parents cannot self-select it. That includes Elite candidates routed to Performance: set their level and they land in the right class.</li>
+    <li><b>Age band is the only gate.</b> When we know the athlete&rsquo;s birth date it is enforced; when we do not, the booking is allowed and staff fix the profile later.</li>
+    <li><b>Level does NOT gate anything any more (5 Aug 2026).</b> A class card still says what level it is, as useful context &mdash; but any athlete in the age band can book any class. Nobody waits on a coach to be "placed".</li>
   </ul>
-  <div class="shots-2">
-    <figure><img width="1600" height="1075" src="images/performance-classes.webp" alt="Performance classes grid" loading="lazy" /><figcaption>The class grid: find the band, pick the level, enroll.</figcaption></figure>
-    <figure><img width="1600" height="1075" src="images/performance-classes-2.webp" alt="More classes and pricing" loading="lazy" /><figcaption>Every card states who it is for. Weekly day and time are placeholders until Andre locks them.</figcaption></figure>
+
+  <div class="callout warn">
+    <span class="tag">Why the level gate went, in one number</span>
+    <p>On relaunch morning the classes email went to 38 credit-holding families at 7:02am. Finishing &amp; Fundamentals sat at <b>0 of 8</b> &mdash; and <b>33 active athletes carried no level at all</b>, so not one of those families <i>could</i> have booked it. A booking step that waits on a coach is a step parents do not wait through.</p>
   </div>
+
+  <p><b>Pricing:</b> $40 drop-in. <b>The 8-pack at $280 is retired (15 Aug 2026)</b> &mdash; if you see it quoted anywhere, that surface is stale and wants reporting.</p>
+
   <div class="faq">
-    <div class="qa"><p class="q">A parent insists their 10-year-old is advanced. What do they do?</p><p class="a">They ask us. A coach or admin sets Performance level to Advanced on the athlete's profile, and Dribbling &amp; Moves opens up for them. See <a href="#p2-clients">Clients</a>.</p></div>
-    <div class="qa"><p class="q">When do classes meet?</p><p class="a">The cards currently say "weekly day and time announced soon". Real days and times are pending. Do not promise a specific evening yet.</p></div>
-    <div class="qa"><p class="q">Can a family use tokens for classes?</p><p class="a">Yes. Classes cost 40 tokens at checkout like any other session. Elite rate tiers do not change class prices: those are Elite-only.</p></div>
+    <div class="qa"><p class="q">A parent insists their 10-year-old is advanced. What do they do?</p><p class="a">Nothing. They book. Level is context on the card, not a door, and no staff action is needed.</p></div>
+    <div class="qa"><p class="q">A parent wants a class that is not listed.</p><p class="a">That is exactly what the interest form is for. Their answer counts toward opening it, and they hear from us when it does &mdash; not on a drip, only when something real happens.</p></div>
+    <div class="qa"><p class="q">Can a family use tokens for classes?</p><p class="a">Yes, and since 15 Aug tokens can also pay <i>part</i> of it with the card covering the rest.</p></div>
+    <div class="qa"><p class="q">How do I open a class once a group is ready?</p><p class="a">See <a href="#p2-performance-interest">Performance interest (admin)</a>. Short version: give the hour a coach in Availability, then tell those families from that screen &mdash; it refuses to send if the class has no hour behind it.</p></div>
   </div>
 </section>
 
@@ -860,6 +947,30 @@
   </div>
 </section>
 
+<section class="doc" id="p1-waiver">
+  <h3>The waiver, and the signature ledger <a class="hash" href="#p1-waiver">#</a></h3>
+  <p class="lede"><b>Rebuilt 15 Aug 2026.</b> Five sections became fifteen, and every acceptance is now recorded as evidence &mdash; who, when, and <i>which text</i> they agreed to.</p>
+
+  <table class="facts">
+    <tr><th>Once per family</th><td>A family signs <b>once</b>, not once per booking. Every surface that used to ask &mdash; checkout, Foundations, the Assessment scheduler, invite confirm &mdash; shows a quiet <i>Waiver on file for your family</i> note instead.</td></tr>
+    <tr><th>What re-arms it</th><td>Publishing new waiver text. Everyone re-signs the new text exactly once, at their next booking. That is the trigger working, not a bug.</td></tr>
+    <tr><th>Guests</th><td>Always tick. A typed email address is not proof of identity.</td></tr>
+    <tr><th>Where they sign</th><td>In the booking flow, or any time at <code>/account/waiver</code>. The account home shows a banner until it is done.</td></tr>
+    <tr><th>Reading it</th><td>Every ask has a <b>Read it</b> door, and the I-agree box stays locked until they scroll to the end.</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <span class="tag">The fabrication is dead, and it must stay dead</span>
+    <p>Every admin booking path used to stamp "waiver signed" as <b>true</b> without anyone signing anything &mdash; recording signatures nobody gave, which in a dispute is worse than having none. They now record the honest state, and an admin booking an unsigned family fires the sign-before-you-come-in email automatically.</p>
+    <p>The scale of it: on the live site the day it was fixed, the admin screen claimed a signature was on file for <b>38 of 81 families who had not signed</b> &mdash; and those same families were being shown the red "please sign" banner in their own portal. Two screens, opposite answers, and the confident one was wrong.</p>
+  </div>
+
+  <div class="callout warn">
+    <span class="tag">Not legally final</span>
+    <p>The text is stronger than what it replaced &mdash; it now expressly names AFC&rsquo;s own ordinary negligence, which the old one did not, while carving out gross negligence and willful misconduct. <b>It has still not been through a California attorney.</b> Open items: the registered entity name, whether to include arbitration, and the concussion / sudden-cardiac-arrest information sheets state law requires. Do not describe it to anyone as finished.</p>
+  </div>
+</section>
+
 <section class="doc" id="p1-account">
   <h3>Athletes, waiver &amp; account management <a class="hash" href="#p1-account">#</a></h3>
   <p class="lede">The account page (<code>/account</code>) was redesigned in July into the family's home base: the wallet front and center, one tile per feature, and everything else two taps away.</p>
@@ -944,6 +1055,48 @@
     <div class="qa"><p class="q">A parent calls to cancel. Fastest path?</p><p class="a">Find the booking (search by name), open it, set status to Cancelled. Token payments refund themselves and the cancellation email goes out. For card-paid demo bookings, also refund the payment under <a href="#p2-payments">Payments</a>.</p></div>
     <div class="qa"><p class="q">Can I book someone with no athlete profile?</p><p class="a">Not from the admin form: it is profile-first by design. Add the family and athlete under Clients (takes a minute), then book. Parents booking through the public wizard can still just type a name.</p></div>
     <div class="qa"><p class="q">Should I mark old sessions Completed by hand?</p><p class="a">Prefer coach check-in: it also computes coach pay. If a coach forgot, use the Unlogged sessions panel in <a href="#p2-coachpay">Coach Pay</a> and log it on their behalf: attendance, pay, and rewards all happen properly.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-session-tools">
+  <h3>Working a session: bubbles, add athlete, change coach, bulk location <a class="hash" href="#p2-session-tools">#</a></h3>
+  <p class="lede">Four things the calendar learned between 15 and 20 Aug 2026. Each one replaced a job that previously meant asking for a database edit.</p>
+
+  <h4>One bubble per session</h4>
+  <ul class="plain">
+    <li>A group of five used to render as five separate chips. It is now <b>one bubble you open to see exactly who is in it</b>, with the coach&rsquo;s photo and a per-coach ring colour beside the headcount.</li>
+    <li>A cancelled seat stays listed, struck through, but never counts toward the headcount &mdash; and a session only reads as settled when <b>every</b> seat is, so an unpaid family cannot hide behind paid ones.</li>
+    <li><b>The day view opens on your first session</b> now. It used to open on empty 9am grid every single time, which for a club that coaches 3:00&ndash;8:30pm was a scroll you paid daily.</li>
+    <li>In <b>month</b> view a busy day shows at most three chips plus "+N more" &mdash; judge a roster in day view.</li>
+  </ul>
+
+  <h4>Add an athlete to a session that already exists</h4>
+  <p>From the session roster. Three outcomes, decided for you:</p>
+  <table class="facts">
+    <tr><th>A seat is free</th><td>It books, settled from whatever that family holds &mdash; or billed, see <a href="#p2-payment-requests">the three doors</a>.</td></tr>
+    <tr><th>The group is full</th><td>The <b>whole session converts</b> to the next format (3-Player &rarr; 4-6 Group). Everyone&rsquo;s seat gets cheaper, and families who paid dollars at the old rate get the difference back as tokens, automatically.</td></tr>
+    <tr><th>Top of the ladder</th><td>A 4-6 Group at six refuses a seventh. That is a hard stop, by decision, not a bug to route around.</td></tr>
+  </table>
+  <div class="callout warn">
+    <span class="tag">Conversions are silent, and the returns have a rule</span>
+    <p><b>No emails go to the existing families</b> &mdash; the portal shows the new format and you tell them yourself. And the difference comes back <b>only to families who paid dollars</b>: a seat settled with a pack credit or a session credit gets nothing back, which is Andre&rsquo;s explicit call after seeing both outcomes. The known cost, accepted: an Elite pack is scoped to a format, so converting also stops that family&rsquo;s remaining credits matching the group. Nothing breaks &mdash; it is a conversation and a comp.</p>
+  </div>
+
+  <h4>Change coach &mdash; including on a session that already happened</h4>
+  <p>The Coach line on any session carries its own <b>Change</b> button. This exists because <code>Booking.coachId</code> is what every check-in surface keys on, so after a last-minute swap the coach who actually ran the session could not check in and could not be paid.</p>
+  <ul class="plain">
+    <li>The <b>whole slot</b> moves, never one athlete &mdash; a partial move splits one real session into two mispriced pay cards.</li>
+    <li>A past session is never conflict-checked. Reality wins.</li>
+    <li>If the old coach already checked in, that log is voided &mdash; but only with explicit consent, and <b>never</b> if it has already been reported on a payout.</li>
+    <li><b>No emails.</b> Reschedule owns telling the family.</li>
+  </ul>
+  <p class="note">Andre could not find this button when it first shipped &mdash; he reached for <b>Reschedule</b>, the only control whose name suggested change, which refuses past times. That is why it now sits on the Coach line itself: <i>the fact you want to change is where you tap to change it.</i></p>
+
+  <h4>Bulk location</h4>
+  <p>Move every session matching a filter to another park in one action &mdash; the job that used to be 54 hand-written database updates. It <b>previews</b> first, and the preview says three things a count cannot: which rows would <i>not</i> move (already there, or cancelled), which families already hold a reminder email naming the <b>old</b> park, and which <b>recurring series</b> the selection touches.</p>
+  <div class="callout warn">
+    <span class="tag">The series is the part that bit</span>
+    <p>A series carries its own location, which next month&rsquo;s rebook reads. Moving its sessions alone leaves next month regenerating at the old park &mdash; which is exactly what the first hand-run sweep left behind until thirteen series were fixed separately. The series now moves <b>with</b> its sessions by default. Families holding a stale reminder are <b>flagged, never auto-emailed</b>: an automatic "your location changed" send would fire dozens of times on the first sweep, which is how a family learns to ignore the one that matters.</p>
   </div>
 </section>
 
@@ -1070,7 +1223,7 @@
   <table class="facts">
     <tr><th>All</th><td>Everyone with an account or a booking.</td></tr>
     <tr><th>Foundations</th><td>Families with Foundations program bookings.</td></tr>
-    <tr><th>Performance</th><td>Families booked into the six classes (or legacy open groups).</td></tr>
+    <tr><th>Performance</th><td><b>Demand-led.</b> Only classes with a coached weekly hour are bookable; everything else is an interest form that opens a class at <b>4 athletes</b> in the same age band and hour. $40 drop-in. <b>No 8-pack, no level gate.</b></td></tr>
     <tr><th>Elite</th><td>Families with Elite-gated bookings, or any athlete anywhere in the Elite journey (applied through accepted or waitlisted).</td></tr>
     <tr><th>Not booked</th><td>Accounts with zero active bookings: your re-engagement call list.</td></tr>
   </table>
@@ -1107,12 +1260,91 @@
     <li><b>Token refunds</b> are not on this page: cancelling a token-paid booking refunds the wallet automatically. For anything unusual, adjust the wallet directly in <a href="#p2-tokens-admin">AFC Tokens</a>.</li>
   </ul>
   <div class="callout warn">
-    <span class="tag">Demo mode</span>
-    <p>Card checkout is simulated until Stripe lands. Any card number "succeeds" (there is no real charge), and a card ending in 0000 plays the decline path. Say "demo checkout, no real charge" when walking anyone through it, and treat real money as cash/e-transfer plus Mark paid for now.</p>
+    <span class="tag">Card payments are REAL &mdash; corrected 25 Aug 2026</span>
+    <p><b>Stripe went live in July 2026. Every card checkout on afctraining.com charges a real card.</b> This guide previously said the opposite, and that sentence is the most expensive thing that was ever wrong in it: anyone repeating "demo checkout, no real charge" to a parent is describing a payment that has already left their account.</p>
+    <p>What that means in practice: a card number ending 0000 no longer "plays a decline path" &mdash; there is no test mode on the live site. Refunds are real money leaving AFC, which is why a card refund now needs an <b>admin approval</b> rather than happening on a parent&rsquo;s tap (see <a href="#p2-refund-queue">the refund request queue</a>). Cash and e-transfer still exist and are still recorded with <b>Mark paid</b>; they are a second way to pay, not the only real one.</p>
   </div>
   <div class="faq">
     <div class="qa"><p class="q">A family paid cash for a pending booking. What do I click?</p><p class="a">Mark paid on that booking (dashboard "Unpaid sessions" is fastest). It becomes confirmed and counts in revenue.</p></div>
     <div class="qa"><p class="q">Refund a completed session?</p><p class="a">The refund flow keeps a completed booking completed (the session happened) while refunding the money. Decide case by case; for token payments use a wallet adjustment with a note.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-money">
+  <h3>The Money, and Collections <a class="hash" href="#p2-money">#</a></h3>
+  <p class="lede"><b>New, 20&ndash;21 Aug 2026.</b> <code>/admin/money</code> is the owner&rsquo;s hub: what came in, what each coach delivered against what they were paid, and what is still owed. <code>/admin/money/uncollected</code> turns that last number into names and a send button.</p>
+
+  <div class="callout warn">
+    <span class="tag">Andre only &mdash; and that is enforced, not implied</span>
+    <p>"Make sure I am the only person that can view money, no one else in the whole platform." The OWNER role was <b>not</b> that: production carried <b>four</b> owner accounts. Both money pages now require the OWNER role <i>and</i> a named address, the nav asks the same question so no one is shown a link the page refuses, and the allowlist is a code constant &mdash; widening who sees the money costs a commit, not a settings toggle.</p>
+  </div>
+
+  <h4>What it answers</h4>
+  <ul class="plain">
+    <li><b>Money in</b> &mdash; real dollars, reconciling against Stripe.</li>
+    <li><b>Delivered value per coach</b> against what that coach was paid. Roughly <b>29% of ninety days of delivered value had no payment row at all</b> when it was first switched on.</li>
+    <li><b>What is owed</b>, per family, with the sessions behind it.</li>
+  </ul>
+
+  <h4>Collections: never bill a family for a session they already paid for</h4>
+  <p>Each row shows what the family <b>holds</b> before any button appears, and how much of the debt it covers:</p>
+  <table class="facts">
+    <tr><th>Fully covered</th><td>Settling leads, and the page says <b>not to bill them</b>. Measured on the sandbox: one family owed $1,050 across 17 sessions while holding 2,011 tokens and 3 prepaid sessions.</td></tr>
+    <tr><th>Partly covered</th><td>Settle what their credit reaches; the payment request is <b>re-priced to the remainder</b>.</td></tr>
+    <tr><th>Not covered</th><td>Send the request for the full amount.</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <span class="tag">Known limit, stated not hidden</span>
+    <p>A family who is <b>both</b> chased and holding credit shows neither button &mdash; settling under a live request would leave it open and they could pay twice. Cancel the request first, or settle from their client page.</p>
+  </div>
+</section>
+
+<section class="doc" id="p2-payment-requests">
+  <h3>Asking a family to pay: the three doors <a class="hash" href="#p2-payment-requests">#</a></h3>
+  <p class="lede">A payment request emails a family a link that pays straight into the platform. <b>Since 24&ndash;25 Aug 2026 you can raise one from wherever you happen to be when you realise a session is owed</b> &mdash; not only from a screen you have to go and find.</p>
+
+  <h4>The three doors, and they are all the same engine</h4>
+  <table class="facts">
+    <tr><th>1. While booking</th><td>In <b>New booking</b>, the per-seat payment dropdown offers <b>Send payment request</b> beside <i>Cash / e-transfer</i> and <i>Leave unpaid</i>. The seat books owing and the family is emailed the moment the booking commits.</td></tr>
+    <tr><th>2. On the session</th><td>Open any unpaid session and the Payment line carries <b>Send payment request</b>. This is the "they trained last Tuesday and nobody paid" case.</td></tr>
+    <tr><th>3. Adding to a session</th><td><b>Add athlete</b> offers it too &mdash; including when the group is full and adding one converts the format. The joining family is the only person in that slot who has paid nothing yet.</td></tr>
+  </table>
+  <p>Plus the two that already existed: the family&rsquo;s own client page, and <a href="#p2-money">Collections</a>. All five run the same rules, so no two screens can ask two families different amounts for the same thing.</p>
+
+  <h4>What you need to know when you use it</h4>
+  <ul class="plain">
+    <li><b>Blank charges the seat price</b>, derived server-side. Type a number only when you mean a different one; it is per session, so a family with two seats is asked for twice it.</li>
+    <li><b>One live ask per session.</b> A session that has already been asked says so, with the amount, instead of offering a second link. Two links means the family pays the wrong one.</li>
+    <li><b>It is never pre-chosen.</b> Asking a family for money is not something a screen decides on their behalf.</li>
+    <li><b>An amber line warns you</b> if that family&rsquo;s own credit would have covered the seat. It is allowed &mdash; preserving a pack for a session that matters more is a real reason &mdash; but it is said out loud, not discovered on their next statement.</li>
+    <li><b>Not offered</b> to a family with no email on file, on a $0 seat, or on the $199 Assessment Pathway.</li>
+    <li>On a format conversion the price is the <b>new</b> format&rsquo;s rate &mdash; a seat added into a 3-Player that becomes a 4-6 Group is billed at the 4-6 rate.</li>
+  </ul>
+
+  <div class="callout warn">
+    <span class="tag">Recording cash kills the ask &mdash; you do not have to remember to</span>
+    <p>Now that a bill can ride a booking, "took the cash at the field on Tuesday" and "they still have a bill in their portal on Wednesday" are the same Tuesday. <b>Marking a session paid, or cancelling it, cancels any open request on it automatically.</b> The money was never at risk either way &mdash; a payment against a settled session is refused and refunded &mdash; but that hands a parent a declined-looking failure for a bill we showed them, which reads as their problem rather than ours.</p>
+  </div>
+
+  <div class="faq">
+    <div class="qa"><p class="q">Does the family pay the processing fee?</p><p class="a">Yes, shown as its own line before they pay: <b>2.9% + 30&cent;</b> on the card portion. A $120 request charges $123.78. If they settle it from tokens instead, there is no fee &mdash; no card is touched.</p></div>
+    <div class="qa"><p class="q">How long does the link live?</p><p class="a">Seven days by default, and never past the session&rsquo;s own start time.</p></div>
+    <div class="qa"><p class="q">The booking saved but the email did not send.</p><p class="a">The screen tells you which family, and the session is real and sitting on the Unpaid tab. Send it again from the session itself. A failed email never unwinds a booking.</p></div>
+  </div>
+</section>
+
+<section class="doc" id="p2-refund-queue">
+  <h3>Refund requests <a class="hash" href="#p2-refund-queue">#</a></h3>
+  <p class="lede"><b>New, 5 Aug 2026.</b> At <code>/admin/payments/refund-requests</code>. A parent whose cancellation credited their wallet can ask for the card refunded instead; this is where that gets decided.</p>
+  <table class="facts">
+    <tr><th>Approving</th><td>Refunds the <b>full original charge</b> at Stripe while clawing back the credit that was issued. The parent ends whole; AFC absorbs only the processing fee.</td></tr>
+    <tr><th>It refuses when</th><td>The credit has already been spent. Paying then would fund both the refund and whatever those tokens bought.</td></tr>
+    <tr><th>Order</th><td>Money first: if Stripe refuses, nothing else moves. There is no half-applied refund.</td></tr>
+  </table>
+  <div class="callout warn">
+    <span class="tag">The lesson this screen taught, worth carrying everywhere</span>
+    <p>Its first real use <b>reported success while nothing had happened</b> &mdash; no refund at Stripe, request still open, wallet untouched. The action had failed correctly and returned its error, but the error rendered in the table row <i>behind</i> the dialog, so a declined refund and a successful one looked identical to the person clicking. <b>Judge a money action by the ledger, never by the screen&rsquo;s own success line.</b></p>
   </div>
 </section>
 
@@ -1140,7 +1372,7 @@
   <h4>The payout email</h4>
   <ul class="plain">
     <li>Fires automatically on the <b>15th</b> (covering the 1st to the 15th) and the <b>30th or last day of the month</b> (covering the 16th to month-end), at about 8:30 in the morning Pacific.</li>
-    <li>Goes to the payout recipient (default <code>dre@afsoccer.club</code>) with an optional CC (Sahand's address, once set). One table per coach grouped by session type and rate, plus a grand total. Andre pays manually from it; the system never moves money.</li>
+    <li>Goes to the payout recipient (default <code>dre@afctraining.com</code>) with an optional CC. One table per coach grouped by session type and rate, plus a grand total. Andre pays manually from it; the system never moves money.</li>
     <li><b>Late additions</b>: a session checked in after its period's email already went out is not lost. It rides the next email in its own "late additions" section. Nothing double-reports, nothing disappears.</li>
     <li>Buttons on this page: <b>Send test to me</b> (a preview to your own inbox, does not mark anything as reported), <b>Send now for real</b> (guarded, marks sessions reported), and <b>Print</b> for a PDF copy.</li>
   </ul>
@@ -1208,7 +1440,7 @@
     <figure><img width="1600" height="1075" src="images/admin-emails-2.webp" alt="Templates" loading="lazy" /><figcaption>Editable templates with merge fields and a reset-to-default.</figcaption></figure>
   </div>
   <ul class="plain">
-    <li><b>The log</b> shows the last 100 sends: sent, failed, or simulated (when no email key is configured). Failures show the provider's error, which is how you spot the sandbox limit.</li>
+    <li><b>The log</b> shows the last 100 sends: sent, failed, or simulated. <b>On afctraining.com sends are real</b> &mdash; "simulated" only appears on the demo site, where no email key is configured. Failures show the provider's error, which is how you spot a bad address.</li>
     <li><b>Editable here</b>: booking confirmation, receipt, session reminder, cancellation, email verification, and password reset. Merge fields like <code>{{customerName}}</code> fill themselves.</li>
     <li><b>Everything else</b> (welcome, guest account, Elite set, rewards set, payout, and more) ships from the designed set, restyled in July to the same charcoal-and-gold look as the site. Review every design in the <a href="https://afcemails.netlify.app" target="_blank" rel="noopener">email review gallery</a>, with each email's trigger and copy.</li>
     <li><b>Verification codes now lead the subject line</b> ("482913 is your AFC verification code"), so phones surface and auto-fill the code without opening the email.</li>
@@ -1236,6 +1468,18 @@
     <div class="qa"><p class="q">Can I break the site from here?</p><p class="a">Not structurally. You are editing words and images inside a fixed design. Worst case, clear the field and the default comes back.</p></div>
     <div class="qa"><p class="q">Who should have this?</p><p class="a">Anyone trusted with the public voice. It is a permission section like any other, so a staff login can have it or not.</p></div>
   </div>
+</section>
+
+<section class="doc" id="p2-performance-interest">
+  <h3>Performance interest (admin) <a class="hash" href="#p2-performance-interest">#</a></h3>
+  <p class="lede"><code>/admin/performance-interest</code> &mdash; the waiting list behind <a href="#p1-performance">demand-led Performance</a>. <b>It is built not to be read.</b></p>
+  <ul class="plain">
+    <li>Groups that are <b>ready to open</b> lead the page; everything else is context. When nothing is ready it says so, and tells you that you will get an email the moment a group crosses four &mdash; you do not need to check it.</li>
+    <li><b>"Tell these families it&rsquo;s open" announces; it does not schedule.</b> It <b>refuses to send</b> if the class has no weekly hour on an active coach &mdash; emailing "your class is open" for an hour nobody scheduled is the exact failure the whole build exists to end.</li>
+    <li>So the order is: give the hour a coach in <a href="#p2-availability">Availability</a> first, <i>then</i> announce.</li>
+    <li>A family who ticked three time slots counts toward three groups &mdash; opening a class resolves their rows so they cannot be double-counted afterwards.</li>
+  </ul>
+  <p class="note">Four emails exist and each earns its send: on signup, when a group is one short, a single three-week nudge if nothing moved, and when it opens. <b>There is deliberately no drip.</b> A waiting-list email with nothing to do in it is how you train a family to ignore the one that matters.</p>
 </section>
 
 <section class="doc" id="p2-roster">
@@ -1277,7 +1521,7 @@
     <li><b>Mike's Foundations phone</b>: shown on the Foundations page and stamped into every Foundations email signature. It ships as (949) 309-6076; clearing it hides the line.</li>
   </ul>
   <div class="faq">
-    <div class="qa"><p class="q">What should Sahand's login be?</p><p class="a">Front desk template plus Coach Pay (view or manage as Andre prefers) is the intended shape: bookings, clients, and the payout machinery, without site content or settings unless wanted.</p></div>
+    <div class="qa"><p class="q">What should an ops / front-desk login be?</p><p class="a">Front desk template plus Coach Pay (view or manage as Andre prefers) is the intended shape: bookings, clients, and the payout machinery, without site content or settings unless wanted. <b>Check the roster before you copy a name out of this guide</b> &mdash; who does what at AFC has changed more than once since it was written, and access should follow the job someone actually holds today.</p></div>
     <div class="qa"><p class="q">What does Mikey need?</p><p class="a">If he only runs Foundations sessions: a coach login from the Coaches page (check-in plus his own availability). Add Class Roster visibility by granting bookings view if he wants his lists online.</p></div>
     <div class="qa"><p class="q">Can two owners exist?</p><p class="a">Yes, the team panel can promote another owner. Keep it to people who genuinely need everything.</p></div>
   </div>
@@ -1314,14 +1558,26 @@
 </section>
 
 <section class="doc" id="p3-crons">
-  <h3>The two daily automations <a class="hash" href="#p3-crons">#</a></h3>
-  <p class="lede">Two jobs run every day on Netlify, both verified live. Times are Pacific.</p>
+  <h3>The daily automations <a class="hash" href="#p3-crons">#</a></h3>
+  <p class="lede">It was two jobs when this guide was written. It is <b>four scheduled jobs and a stack of sweeps</b> now. Times are Pacific.</p>
+
   <table class="facts">
-    <tr><th>7:00 AM daily</th><td><b>Recurring slots</b>: from the 15th, opens the 48-hour rebook window for any series booked only through this month and sends the reminder email. Every day, it also quietly ends any series whose window expired and releases those times to the public calendar.</td></tr>
-    <tr><th>8:30 AM daily</th><td><b>Coach payout</b>: checks whether today is a send day (the 15th, or the 30th slash last day of the month). On send days it builds the payout tables, emails them once, and stamps the included sessions as reported. Other days it does nothing.</td></tr>
+    <tr><th>7:00 AM daily</th><td><b>Recurring slots</b>: from the 15th, opens the 48-hour rebook window for any series booked only through this month and sends the reminder email. Every day it also ends any series whose window expired and releases those times to the public calendar.</td></tr>
+    <tr><th>7:00 AM daily</th><td><b>The sweeps</b>, which have grown one at a time. Coach <b>check-in reminders</b> for finished-but-unlogged sessions, and a 48-hour <b>escalation digest</b> to Andre. The <b>applications waiting</b> digest &mdash; Elite applications parked more than 48 hours. <b>Performance interest</b>: one-away and it-opened emails. The check-in and uncollected sweeps never look before <b>1 Aug 2026</b> &mdash; July was settled off-platform, and without that floor the first email would have been a wall of already-settled sessions.</td></tr>
+    <tr><th>8:30 AM daily</th><td><b>Coach payout</b>: on send days (the 15th, and the 30th or last day of the month) it builds the payout tables, emails them once, and stamps the included sessions as reported. Other days it does nothing.</td></tr>
+    <tr><th>The 30th</th><td><b>Foundations 70/30 split</b> &mdash; the month&rsquo;s Foundations revenue and what Mikey is owed, leading with "pay Mikey $X". To Andre, cc Mikey.</td></tr>
+    <tr><th>Hourly</th><td><b>Session reminders</b> to families before their session.</td></tr>
+    <tr><th>Weekly</th><td>The <b>uncollected digest</b>: delivered sessions with no payment and no open request. It fires one day in seven and self-skips the rest.</td></tr>
   </table>
+
+  <div class="callout warn">
+    <span class="tag">The discipline these share, and it is deliberate</span>
+    <p>Every one of these fires <b>only when something needs a decision</b>, and every subject line is dated and count-free so a replay is a no-op rather than a second copy. A digest that arrives with nothing to do in it is precisely how you train someone to ignore the one that matters. If you add a sweep, add it to this rule too.</p>
+  </div>
+
   <div class="faq">
-    <div class="qa"><p class="q">What happens if a job fails one morning?</p><p class="a">Both are safe to run again: the payout dedupes against the email log, and the recurring job re-checks state. The next successful run picks everything up. If something looks stuck, tell Trevor.</p></div>
+    <div class="qa"><p class="q">What happens if a job fails one morning?</p><p class="a">They are all safe to run again: sends dedupe against the email log and the jobs re-check state, so the next successful run picks everything up.</p></div>
+    <div class="qa"><p class="q">Coaches say they never see the check-in reminder.</p><p class="a">Known and real: coaches do not read their @afctraining mail. The reminder is doing its job; the channel is the problem. SMS is built and waiting on the Twilio registration.</p></div>
   </div>
 </section>
 
@@ -1346,20 +1602,24 @@
   <h3>Known limits: what not to promise yet <a class="hash" href="#p4-limits">#</a></h3>
   <p class="lede">The platform is feature-complete for v3, and a few edges are intentionally waiting on decisions or third-party setup. Knowing these keeps every conversation honest.</p>
   <table class="facts">
-    <tr><th>Card payments</th><td><b>Demo mode.</b> No real card is ever charged (a number ending 0000 simulates a decline). Real money moves by tokens loaded via cash or e-transfer, and Mark paid. Stripe is the planned fix.</td></tr>
-    <tr><th>Outbound email</th><td><b>Sandbox-limited</b> until the sending domain is verified with Resend. On the demo, only the test inbox actually receives; other addresses log as failed in the Email Log. From-address still shows the Resend onboarding domain.</td></tr>
-    <tr><th>Coach rates</th><td>Only Lucas's pay profile is filled and active (his rates are the worked reference). Sebi, Sebass, Ayman, Sergio, and Mikey wait on Andre's numbers, and their sessions cannot be pay-logged until then.</td></tr>
-    <tr><th>Session reminder emails</th><td>Designed, not yet automated. Do not promise "you'll get a reminder the day before".</td></tr>
-    <tr><th>Foundations term dates</th><td>Blocks currently start at the <b>next occurrence of the class day</b>, whenever the family enrolls. Real fixed term start dates wait on Mike's calendar. Do not promise a specific "term start".</td></tr>
+    <tr><th>Card payments</th><td><b>LIVE. Real cards, real money, since July 2026.</b> Every card charge adds the processing fee (2.9% + 30&cent;) as its own line, so what Stripe captures is slightly above what AFC books as revenue &mdash; that gap IS the fee, and it is the two systems agreeing. Cash and e-transfer are still recorded with <b>Mark paid</b>.</td></tr>
+    <tr><th>Outbound email</th><td><b>Live on afctraining.com</b> &mdash; real families receive real email every day. The sandbox limit still applies on the <i>demo</i> site, where only the test inbox receives and everything else logs as failed. <b>The real limit is a channel one: coaches do not read their @afctraining mail.</b> SMS is built and waiting on the Twilio registration, so anything a coach must act on still needs a text from a human.</td></tr>
+    <tr><th>Coach rates</th><td>Mostly filled now, and the roster has changed &mdash; Lucas, Leo and the Aymans are gone from it. Jonas is live and bookable. <b>Mikey&rsquo;s card is $0 on purpose</b>: he is paid a 70/30 share of Foundations, not per session, and the monthly split email is what settles it. <b>Sebi is hidden, not deleted</b> &mdash; the record is kept and unbookable while he is at PT school.</td></tr>
+    <tr><th>Session reminder emails</th><td><b>Automated now</b>, on an hourly job. You can promise a reminder.</td></tr>
+    <tr><th>Foundations term dates</th><td><b>Real sessions now</b>, with named blocks, date ranges and a picker &mdash; a family can choose a later block instead of the one starting next. Two open edges: a block must have <b>at least 2 classes left</b> to be sold, and the term calendar lives in <b>code</b>, so Mike&rsquo;s winter dates are a developer change, not something he can paste into Site Content.</td></tr>
     <tr><th>Campaign email series</th><td>The client-import, leads, and activation series (8 emails) are <b>designs only</b>. Nothing sends them: no trigger, no schedule. Review them in the gallery, do not promise them.</td></tr>
     <tr><th>Game film card</th><td>Shows "coming soon" until the Dropbox file-request URL is pasted into Settings. Until then, do not tell families to upload film.</td></tr>
-    <tr><th>Performance class schedule</th><td>Class cards say "weekly day and time announced soon". Days, times, and the 8-pack purchase flow (waits on Stripe) are pending.</td></tr>
+    <tr><th>Performance classes</th><td>Now <a href="#p1-performance">demand-led</a>: the page shows only classes that can actually be booked, and everything else is an interest form. <b>The $280 8-pack is retired.</b> Assigning a weekly hour to a coach is what publishes a class.</td></tr>
     <tr><th>Reward ladder numbers</th><td>The 15 / 30 / 40 ladder and the Elite rate ladder are <b>editable defaults</b> awaiting Andre's final call, like the perk thresholds (jersey at 10, booklet at 20, Sebi video at 500 tokens, merch at 1,000).</td></tr>
     <tr><th>Report cards</th><td>In-portal only, Elite only, no email notification. Tell the family a card is waiting.</td></tr>
-    <tr><th>Closed group edges</th><td>Invite emails use a plain template; confirming or declining notifies nobody, and an emptying pack sends no warning. The biggest bookable group format today is 3 players (a 4-6 player service is not in the catalog yet). Admin cannot create or dissolve groups.</td></tr>
-    <tr><th>Elite packs, admin side</th><td>No admin screen grants or tops up pack sessions. Fix mistakes with a token adjustment or a comped booking.</td></tr>
+    <tr><th>Closed group edges</th><td>Invite emails use a plain template; confirming or declining notifies nobody, and an emptying pack sends no warning. <b>A 4-6 player format now exists</b> and a full group can be <a href="#p2-session-tools">converted up into it</a>. An admin can now <b>release</b> a family&rsquo;s standing weekly hold from the coach list, though creating and dissolving groups is still parent-side.</td></tr>
+    <tr><th>Elite packs, admin side</th><td><b>Fixed.</b> The client page has an Elite packs panel with Restore / Deduct per pack, and session credits now carry a full history &mdash; who moved one, when, and why. Before that a pack was a bare number that could change with no trace, which is how four families quietly lost credits.</td></tr>
     <tr><th>Missed-emails inbox</th><td>Replies to our emails land in the regular inbox, not in the admin. The in-admin inbox and direct reply are deferred pending an inbound-email decision.</td></tr>
     <tr><th>Google Calendar</th><td>No two-way sync. Every confirmation email has an add-to-calendar link, which covers most asks.</td></tr>
+    <tr><th>The waiver</th><td><b>No attorney has reviewed it.</b> Stronger than what it replaced, but the entity name, the arbitration question and the state-required concussion / cardiac information sheets are all open. Never call it final.</td></tr>
+    <tr><th>Referrals</th><td>The admin page promises a referral reward and <b>it has never once paid out</b>. That matters more now that rewards are the only way a token can enter a wallet.</td></tr>
+    <tr><th>Unlogged sessions</th><td>A stretch of past sessions was never checked in, so streaks and momentum <b>undercount</b> for those families. Fix the logging habit before trusting those numbers.</td></tr>
+    <tr><th>Insurance</th><td>Outside the platform, but the honest one: there is <b>no workers&rsquo; comp</b> with paid coaches on the field, and general liability <b>excludes participant-vs-participant injury</b>. Do not reassure a parent about cover nobody has checked.</td></tr>
     <tr><th>Subscriptions / auto-reload</th><td>On hold pending the bonus decision. Nothing to sell yet.</td></tr>
   </table>
   <p>The demo database is shared: whatever you create while practicing, prefix it with <code>ZZTest</code> and delete it after.</p>
@@ -1373,7 +1633,7 @@
   <table class="facts">
     <tr><th>Demo owner login</th><td><code>andre@afsoccer.club</code> / <code>demo1234</code> at <code>/admin/login</code></td></tr>
     <tr><th>Demo parent login</th><td><code>parent@example.com</code> / <code>demo1234</code> at <code>/login</code></td></tr>
-    <tr><th>Tokens</th><td>$1 = 1 token, flat, never expire. Loads: $100 / $250 / $500 / $1,000 / custom $20 to $10,000.</td></tr>
+    <tr><th>Tokens</th><td>$1 = 1 token, flat, never expire. <b>Grant-only since 15 Aug 2026 &mdash; parents cannot buy them.</b> Pre-selected at checkout, pay part of a bill with the card covering the rest.</td></tr>
     <tr><th>Elite rates (per athlete)</th><td>Drop-in: Private $120 &middot; 2P $90 &middot; 3P $75 &middot; 4-6P $60. Pack rates: Private 105/95/85 &middot; 2P 75/70/65 &middot; 3P 60/55/50 &middot; 4-6P 50/45/40 (4 / 8 / 12-pack).</td></tr>
     <tr><th>Elite packs</th><td>Prepaid sessions of one format, no expiry. Private totals: $420 / $760 / $1,020. Cancel 24h+ ahead returns the session to the pack.</td></tr>
     <tr><th>Assessment</th><td>$199, converts to 199 tokens on acceptance (once per athlete ever); converting also sends the acceptance email.</td></tr>
@@ -1383,14 +1643,17 @@
     <tr><th>Loyalty ladder</th><td>15 &rarr; 25 tokens &middot; 30 &rarr; free session voucher &middot; 40 &rarr; 20% off a camp. Per athlete, automatic, editable in admin.</td></tr>
     <tr><th>Referral</th><td>Performance/Elite: 100 to the referrer, 25 to the friend, at the friend's first completed paid session. Foundations: instant $12 (4-week) or $15 (9-week) off the friend's first block, and the same $ in tokens to the referrer.</td></tr>
     <tr><th>Discounts</th><td>Codes are created under Services &amp; Pricing. One discount per booking: code, voucher, or referral discount, never stacked.</td></tr>
-    <tr><th>Foundations contact</th><td>Mike Monary &middot; (949) 309-6076 &middot; mikey@afsoccer.club (auto-signed on Foundations emails).</td></tr>
+    <tr><th>Foundations contact</th><td>Mike Monary &middot; (949) 309-6076 &middot; mikey@afctraining.com (auto-signed on Foundations emails).</td></tr>
     <tr><th>Recurring window</th><td>From the 15th: 48 hours to keep the slot, then it releases. Reminder at 7:00 AM Pacific.</td></tr>
-    <tr><th>Coach pay (Lucas ref.)</th><td>$35 base +$5/athlete, $80 cap &middot; shadow $25 &middot; camp $35. 1 athlete = base only.</td></tr>
+    <tr><th>Coach pay</th><td>Base + $5 per athlete in the group, per-profile cap &middot; shadow $25 &middot; camp $35 flat. <b>Mikey is $0 by design</b> (70/30 Foundations share instead).</td></tr>
     <tr><th>Payout email</th><td>15th (1-15) and 30th/last day (16-end), ~8:30 AM Pacific, to dre@ (CC Sahand when set).</td></tr>
     <tr><th>Correction window</th><td>30 minutes after check-in (editable in Coach Pay payout settings).</td></tr>
-    <tr><th>Cancellation policy</th><td>24 hours notice per terms; online cancel refunds tokens until start time; late-cancel forfeits are a manual staff step today.</td></tr>
+    <tr><th>Cancellation policy</th><td>24 hours notice per terms. A parent cancel returns value as <b>tokens</b> at the policy percentage; a <b>card</b> refund is requested and <b>admin-approved</b>; an admin cancel never credits automatically. See <a href="#p1-cancel">the full rules</a>.</td></tr>
+    <tr><th>Card fee</th><td><b>2.9% + 30&cent;</b> on every card charge, shown to the family as its own line. A $120 request charges $123.78. No fee when tokens pay. Stripe&rsquo;s gross therefore sits <b>above</b> the platform&rsquo;s by exactly the fees &mdash; that is the two systems agreeing.</td></tr>
+    <tr><th>Asking for money</th><td>Five doors, one engine: while booking, on the session, when adding an athlete, the family&rsquo;s client page, and Collections. Blank charges the seat price. <a href="#p2-payment-requests">Details</a>.</td></tr>
+    <tr><th>The Money</th><td><code>/admin/money</code> and <code>/admin/money/uncollected</code>. <b>Andre&rsquo;s account only</b>, enforced in code.</td></tr>
     <tr><th>Booking horizon</th><td>Parents can book up to 6 months ahead. Login lasts 30 days.</td></tr>
-    <tr><th>All emails</th><td><a href="https://afcemails.netlify.app" target="_blank" rel="noopener">afcemails.netlify.app</a>: all 34 designs, triggers, and copy.</td></tr>
+    <tr><th>All emails</th><td>afcemails.netlify.app &mdash; every design, its trigger, and its copy.</td></tr>
   </table>
   <p class="backtop"><a href="#top" onclick="window.scrollTo(0,0);return false;">Back to top &uarr;</a></p>
 </section>
