@@ -342,7 +342,7 @@
   <span class="eyebrow">AFC &middot; Internal training</span>
   <h2 class="title">Know the platform like you built it.</h2>
   <p>This guide walks through every screen a parent, a coach, or an admin will ever touch. After reading it, anyone on the team should be able to answer any question a parent or coach asks. Use the search box on the left, or print the whole thing.</p>
-  <p style="margin-top:10px; font-size:13px; color:var(--gold);">Updated August 25, 2026. The platform moved a long way between 9 July and now &mdash; card payments went live, tokens stopped being something you can buy, Performance came off a published calendar, and the waiver was rebuilt. <b>Start at <a href="#p0-changed" style="color:var(--gold)">What changed since 9 July</a>: some of what this guide used to say is now wrong, and that page lists it.</b></p>
+  <p style="margin-top:10px; font-size:13px; color:var(--gold);">Updated August 25, 2026, with fresh screenshots of every screen that changed. The platform moved a long way between 9 July and now &mdash; card payments went live, tokens stopped being something you can buy, Performance came off a published calendar, and the waiver was rebuilt. <b>Start at <a href="#p0-changed" style="color:var(--gold)">What changed since 9 July</a>: some of what this guide used to say is now wrong, and that page lists it.</b></p>
 </div>
 
 <!-- ============================================================ START -->
@@ -370,8 +370,9 @@
   </table>
 
   <div class="callout warn">
-    <span class="tag">Screenshots are older than the words</span>
-    <p>The captures in this guide are from 9 July unless a caption says otherwise. Where a screen has been redesigned since &mdash; the wallet, Performance, the payments page &mdash; <b>trust the text over the picture</b>. Retaking the full set is a separate job; the README says how.</p>
+    <span class="tag">Which screenshots you can trust</span>
+    <p><b>Recaptured 25 Aug 2026, from a running build:</b> the wallet and account home, the waiver (desktop and phone), the Performance page, the bookings calendar and a session roster, The Money, Collections, Payments, refund requests, Performance interest, the clients list, and all three payment-request doors.</p>
+    <p><b>Everything else is still from 9 July</b> &mdash; the booking wizard, check-in, coach pay, Foundations, Elite. Those screens have not been redesigned, but if a picture and a sentence ever disagree, <b>the sentence is the one that was checked</b>.</p>
   </div>
 </section>
 
@@ -515,6 +516,12 @@
 <section class="doc" id="p1-tokens">
   <h3>AFC Tokens: the wallet <a class="hash" href="#p1-tokens">#</a></h3>
   <p class="lede"><b>1 token = 1 dollar, always.</b> No expiry, works on any program except the $199 Assessment Pathway. Wallet lives at Account &rarr; My Wallet.</p>
+
+
+  <div class="shots-2">
+    <figure><img width="1600" height="1200" src="images/parent-wallet.webp" alt="Wallet page" loading="lazy" /><figcaption>The wallet leads with what the family HOLDS. There is no load button anywhere on it any more.</figcaption></figure>
+    <figure><img width="1600" height="1600" src="images/parent-account-home.webp" alt="Account home" loading="lazy" /><figcaption>The account home: each athlete on their own card, with prepaid sessions surfaced and a one-tap way to book them.</figcaption></figure>
+  </div>
 
   <div class="callout warn">
     <span class="tag">Changed 15 Aug 2026 &mdash; parents can no longer BUY tokens</span>
@@ -787,6 +794,9 @@
   <h3>Performance classes <a class="hash" href="#p1-performance">#</a></h3>
   <p class="lede"><b>Demand-led since 15 Aug 2026.</b> A handful of classes actually run and are bookable today; for everything else a family raises their hand and a class opens when enough of them want the same hour.</p>
 
+
+  <figure><img width="1600" height="1700" src="images/performance-demand-led.webp" alt="The Performance page" loading="lazy" /><figcaption>Only classes with a coached weekly hour appear. Below them, the interest form that opens the next one.</figcaption></figure>
+
   <div class="callout warn">
     <span class="tag">Rewritten 25 Aug 2026 &mdash; the old six-class grid is gone</span>
     <p>This guide used to list six classes across three age bands, each Beginner and Advanced, with a placement rule. <b>All of that is retired.</b> Two separate changes did it:</p>
@@ -951,6 +961,12 @@
   <h3>The waiver, and the signature ledger <a class="hash" href="#p1-waiver">#</a></h3>
   <p class="lede"><b>Rebuilt 15 Aug 2026.</b> Five sections became fifteen, and every acceptance is now recorded as evidence &mdash; who, when, and <i>which text</i> they agreed to.</p>
 
+
+  <div class="shots-2">
+    <figure><img width="1600" height="1300" src="images/parent-waiver.webp" alt="The waiver page" loading="lazy" /><figcaption>/account/waiver — a family can read and sign here any time, not only inside a booking.</figcaption></figure>
+    <figure><img width="780" height="2800" src="images/parent-waiver-phone.webp" alt="The waiver on a phone" loading="lazy" /><figcaption>The same page at 390px, which is where most parents actually sign it.</figcaption></figure>
+  </div>
+
   <table class="facts">
     <tr><th>Once per family</th><td>A family signs <b>once</b>, not once per booking. Every surface that used to ask &mdash; checkout, Foundations, the Assessment scheduler, invite confirm &mdash; shows a quiet <i>Waiver on file for your family</i> note instead.</td></tr>
     <tr><th>What re-arms it</th><td>Publishing new waiver text. Everyone re-signs the new text exactly once, at their next booking. That is the trigger working, not a bug.</td></tr>
@@ -1061,6 +1077,12 @@
 <section class="doc" id="p2-session-tools">
   <h3>Working a session: bubbles, add athlete, change coach, bulk location <a class="hash" href="#p2-session-tools">#</a></h3>
   <p class="lede">Four things the calendar learned between 15 and 20 Aug 2026. Each one replaced a job that previously meant asking for a database edit.</p>
+
+
+  <div class="shots-2">
+    <figure><img width="1600" height="1500" src="images/admin-calendar-bubbles.webp" alt="The bookings calendar" loading="lazy" /><figcaption>The day view, opening on the first session of the day rather than on empty morning grid.</figcaption></figure>
+    <figure><img width="1600" height="1600" src="images/bubbles-roster-crop.webp" alt="One session opened" loading="lazy" /><figcaption>One bubble per session: open it and it names every athlete in the group, with each seat&rsquo;s payment state.</figcaption></figure>
+  </div>
 
   <h4>One bubble per session</h4>
   <ul class="plain">
@@ -1215,6 +1237,9 @@
 <section class="doc" id="p2-clients">
   <h3>Clients &amp; Leads <a class="hash" href="#p2-clients">#</a></h3>
   <p class="lede">Every family, bucketed by where they are in the AFC journey. Names open a full profile in a new tab, so you can keep the list open while you work.</p>
+
+  <figure><img width="1600" height="1400" src="images/admin-clients-waiver.webp" alt="The clients list" loading="lazy" /><figcaption>The clients list today: programme buckets, plus the red <b>Unsigned waiver</b> pill with a live count &mdash; the liability list, deliberately not coloured like a programme.</figcaption></figure>
+
   <div class="shots-2">
     <figure><img width="1600" height="1075" src="images/admin-clients.webp" alt="Clients list" loading="lazy" /><figcaption>The bucket bar: All, Foundations, Performance, Elite, Not booked, with live counts.</figcaption></figure>
     <figure><img width="1600" height="1075" src="images/admin-client-profile.webp" alt="Client profile" loading="lazy" /><figcaption>A full profile opens in its own tab: contact, athletes, wallet, bookings, and more.</figcaption></figure>
@@ -1252,6 +1277,9 @@
 <section class="doc" id="p2-payments">
   <h3>Payments &amp; refunds <a class="hash" href="#p2-payments">#</a></h3>
   <p class="lede">Every payment in one list: filter by status and date, search by family, export CSV. Totals for gross, refunded, and net sit on top.</p>
+
+  <figure><img width="1600" height="1400" src="images/admin-payments-money-in.webp" alt="The payments page" loading="lazy" /><figcaption>Payments is three views now: <b>Money in</b> (reconciles to Stripe), <b>Sessions</b> (what covered each one, in units, with no dollar total), and <b>On the books</b> (per family).</figcaption></figure>
+
   <figure><img width="1600" height="1075" src="images/admin-payments.webp" alt="Payments" loading="lazy" /><figcaption>The payments ledger with filters and export.</figcaption></figure>
   <ul class="plain">
     <li><b>Where payments come from</b>: token payments (the wallet), demo card payments, and manual "mark as paid" entries for cash or e-transfer.</li>
@@ -1273,6 +1301,12 @@
 <section class="doc" id="p2-money">
   <h3>The Money, and Collections <a class="hash" href="#p2-money">#</a></h3>
   <p class="lede"><b>New, 20&ndash;21 Aug 2026.</b> <code>/admin/money</code> is the owner&rsquo;s hub: what came in, what each coach delivered against what they were paid, and what is still owed. <code>/admin/money/uncollected</code> turns that last number into names and a send button.</p>
+
+
+  <div class="shots-2">
+    <figure><img width="1600" height="1700" src="images/admin-money.webp" alt="The Money" loading="lazy" /><figcaption>Have I covered my costs, delivered value against cash collected, Mikey&rsquo;s share, and where the next dollar is.</figcaption></figure>
+    <figure><img width="1600" height="1500" src="images/admin-collections.webp" alt="Collections" loading="lazy" /><figcaption>Who owes what &mdash; and what they already hold, shown before any button.</figcaption></figure>
+  </div>
 
   <div class="callout warn">
     <span class="tag">Andre only &mdash; and that is enforced, not implied</span>
@@ -1303,6 +1337,14 @@
 <section class="doc" id="p2-payment-requests">
   <h3>Asking a family to pay: the three doors <a class="hash" href="#p2-payment-requests">#</a></h3>
   <p class="lede">A payment request emails a family a link that pays straight into the platform. <b>Since 24&ndash;25 Aug 2026 you can raise one from wherever you happen to be when you realise a session is owed</b> &mdash; not only from a screen you have to go and find.</p>
+
+
+  <figure><img width="520" height="640" src="images/booking-send-request.webp" alt="Send payment request in the booking modal" loading="lazy" /><figcaption>Door 1: the seat tender set to <b>Send payment request</b>, with the amount box, the amber warning that this family&rsquo;s own pack would have covered it, and the read-back naming the outward act.</figcaption></figure>
+
+  <div class="shots-2">
+    <figure><img width="520" height="640" src="images/session-bill-door.webp" alt="The door on a session" loading="lazy" /><figcaption>Door 2: a delivered session nobody paid for. The Payment line carries the button.</figcaption></figure>
+    <figure><img width="520" height="640" src="images/session-ask-is-out.webp" alt="A session already asked" loading="lazy" /><figcaption>The same line once the ask is out &mdash; the amount, and no second link on offer.</figcaption></figure>
+  </div>
 
   <h4>The three doors, and they are all the same engine</h4>
   <table class="facts">
@@ -1337,6 +1379,9 @@
 <section class="doc" id="p2-refund-queue">
   <h3>Refund requests <a class="hash" href="#p2-refund-queue">#</a></h3>
   <p class="lede"><b>New, 5 Aug 2026.</b> At <code>/admin/payments/refund-requests</code>. A parent whose cancellation credited their wallet can ask for the card refunded instead; this is where that gets decided.</p>
+
+  <figure><img width="1600" height="1100" src="images/admin-refund-requests.webp" alt="Refund requests" loading="lazy" /><figcaption>Each request with the amount, the reason and the two decisions.</figcaption></figure>
+
   <table class="facts">
     <tr><th>Approving</th><td>Refunds the <b>full original charge</b> at Stripe while clawing back the credit that was issued. The parent ends whole; AFC absorbs only the processing fee.</td></tr>
     <tr><th>It refuses when</th><td>The credit has already been spent. Paying then would fund both the refund and whatever those tokens bought.</td></tr>
@@ -1473,6 +1518,9 @@
 <section class="doc" id="p2-performance-interest">
   <h3>Performance interest (admin) <a class="hash" href="#p2-performance-interest">#</a></h3>
   <p class="lede"><code>/admin/performance-interest</code> &mdash; the waiting list behind <a href="#p1-performance">demand-led Performance</a>. <b>It is built not to be read.</b></p>
+
+  <figure><img width="1600" height="1400" src="images/admin-performance-interest.webp" alt="Performance interest" loading="lazy" /><figcaption>Ready-to-open groups lead. When nothing is ready, it tells you not to bother checking.</figcaption></figure>
+
   <ul class="plain">
     <li>Groups that are <b>ready to open</b> lead the page; everything else is context. When nothing is ready it says so, and tells you that you will get an email the moment a group crosses four &mdash; you do not need to check it.</li>
     <li><b>"Tell these families it&rsquo;s open" announces; it does not schedule.</b> It <b>refuses to send</b> if the class has no weekly hour on an active coach &mdash; emailing "your class is open" for an hour nobody scheduled is the exact failure the whole build exists to end.</li>
