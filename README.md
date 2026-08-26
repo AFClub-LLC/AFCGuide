@@ -15,6 +15,23 @@ training-site/        (this folder IS the site)
   netlify.toml        # publish config (publish = ".", noindex headers)
 ```
 
+## Checking it still tells the truth
+
+```
+node check-guide.mjs
+```
+
+No dependencies. It asserts that retired behaviour is **not taught** (card
+payments as "demo mode", buying tokens, the Performance level gate, the $280
+8-pack) and that the facts that cost real money **are** stated (the card
+processing fee, tokens being grant-only, a card refund needing approval). Run
+it after any platform change that touches what this guide describes, and change
+it in the same commit when a rule changes — that is what makes going stale a
+decision rather than an accident.
+
+It found a real one on its first run: a cheat-sheet edit that had silently
+landed on the wrong table.
+
 ## Conventions
 
 - Screenshots are real captures of the running app at 1280px wide (desktop) and
